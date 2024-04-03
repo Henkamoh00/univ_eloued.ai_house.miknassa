@@ -1,0 +1,45 @@
+{% extends 'layoutWithBootstrap.html' %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css' ) }}">
+{% endblock stylesheets %}
+
+{% block body %}
+{% include 'additions/flashMessages.html' %}
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+
+<div id="map"></div>
+<div class="markerInfo">
+    <h1>شاحنة النفايات</h1>
+    <div class="contentInfo">
+
+        <div class="info">
+            <p>اسم السائق</p><span>محمد محمد</span>
+        </div>
+        <div class="info">
+            <p>رقم الشاحنة</p><span>112</span>
+        </div>
+        <div class="info">
+            <p>نوع الشاحنة</p><span>شاحنة ضاغطة</span>
+        </div>
+        <div class="info">
+            <p>بلدية</p><span>الوادي</span>
+        </div>
+        <div class="info">
+            <p>خط السّير رقم</p><span>03</span>
+        </div>
+        <div class="info">
+            <p>معلومات اضافيّة</p><span>لا يوجد</span>
+        </div>
+
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock body %}

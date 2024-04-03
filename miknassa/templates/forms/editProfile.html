@@ -1,0 +1,213 @@
+{% extends 'layoutWithBootstrap.html' %}
+
+{% block body %}
+{% include 'additions/flashMessages.html' %}
+
+<div class="container loginContainer">
+    <div class="forms">
+        <div class="formBox">
+            <form method="POST" enctype="multipart/form-data">
+                {{ editProfileForm.hidden_tag() }}
+                <div class="row g-3">
+
+                    <div class="col-sm-12 field">
+                        <img src="{{ image }}" alt="صورة الحساب" width="150px" height="150px">
+                    </div>
+
+                    <div class="col-sm-6 field">
+                        <span class="text-danger">* </span>
+                        {{ editProfileForm.firstName.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.firstName }})</span>
+                        {% if editProfileForm.firstName.errors %}
+                        {{ editProfileForm.firstName(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            يرجى إدخال اسم أول صالح.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.firstName(class="form-control") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-sm-6 field">
+                        <span class="text-danger">* </span>
+                        {{ editProfileForm.lastName.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.lastName }})</span>
+                        {% if editProfileForm.lastName.errors %}
+                        {{ editProfileForm.lastName(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            يرجى إدخال اسم عائلة صالح.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.lastName(class="form-control") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-sm-8 field">
+                        <span class="text-danger">* </span>
+                        {{ editProfileForm.username.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.username }})</span>
+                        {% if editProfileForm.username.errors %}
+                        {{ editProfileForm.username(class="form-control is-invalid", placeholder="اسم المستخدم") }}
+                        <div class="invalid-feedback">
+                            اسم المستخدم غير صالح او مستخدم من قبل.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.username(class="form-control", placeholder="اسم المستخدم") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-sm-4 field">
+                        <span class="text-danger">* </span>
+                        {{ editProfileForm.gender.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.gender }})</span>
+                        {{ editProfileForm.gender(class="form-control") }}
+                    </div>
+
+                    <div class="col-12 field">
+                        <span class="text-danger">* </span>
+                        {{ editProfileForm.email.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.email }})</span>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">@</span>
+                            {% if editProfileForm.email.errors %}
+                            {{ editProfileForm.email(class="form-control is-invalid", placeholder="you@example.com") }}
+                            <div class="invalid-feedback">
+                                عنوان البريد الإلكتروني غير صالح او مستخدم من قبل.
+                            </div>
+                            {% else %}
+                            {{ editProfileForm.email(class="form-control", placeholder="you@example.com") }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-12 field">
+                        <span class="text-danger">* </span>
+                        {{ editProfileForm.phoneNumber.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.phoneNumber }})</span>
+                        {% if editProfileForm.phoneNumber.errors %}
+                        {{ editProfileForm.phoneNumber(class="form-control is-invalid", placeholder="333 555 0666") }}
+                        <div class="invalid-feedback">
+                            يرجى إدخال عنوان رقم هاتف صحيح.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.phoneNumber(class="form-control", placeholder="333 555 0666") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4 field">
+                        <span class="text-danger">* </span>
+                        {{ editProfileForm.wilaya.label(class="form-label", for="wilayaId") }}
+                        <span class="text-muted"> ({{ address.wilaya }})</span>
+                        {% if editProfileForm.wilaya.errors %}
+                        {{ editProfileForm.wilaya(class="form-control is-invalid", id="wilayaId") }}
+                        <div class="invalid-feedback">
+                            يرجى اختيار ولاية.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.wilaya(class="form-control", id="wilayaId") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4 field">
+                        <span class="text-danger">* </span>
+                        {{ editProfileForm.dayra.label(class="form-label", for="dayraId") }}
+                        <span class="text-muted"> ({{ address.dayra }})</span>
+                        {% if editProfileForm.dayra.errors %}
+                        {{ editProfileForm.dayra(class="form-control is-invalid", id="dayraId") }}
+                        <div class="invalid-feedback">
+                            يرجى اختيار دائرة.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.dayra(class="form-control", id="dayraId") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4 field">
+                        <span class="text-danger">* </span>
+                        {{ editProfileForm.municipality.label(class="form-label", for="municipalityId") }}
+                        <span class="text-muted"> ({{ address.municipality }})</span>
+                        {% if editProfileForm.municipality.errors %}
+                        {{ editProfileForm.municipality(class="form-control is-invalid", id="municipalityId") }}
+                        <div class="invalid-feedback">
+                            يرجى اختيار بلدية.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.municipality(class="form-control", id="municipalityId") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-sm-12 field">
+                        {{ editProfileForm.imageFile(id="fileUpload") }}
+                        {{ editProfileForm.imageFile.label(class="btn btn-info btnFile", for="fileUpload") }}
+                        {% if editProfileForm.imageFile.errors %}
+                        <div class="text-danger">
+                            اختر ملف PNG أو JPG.
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4 field">
+                        {{ editProfileForm.houseNumber.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.houseNumber }})</span>
+                        {% if editProfileForm.houseNumber.errors %}
+                        {{ editProfileForm.houseNumber(class="form-control is-invalid", placeholder="333 555 0666") }}
+                        <div class="invalid-feedback">
+                            ادخل رقم صالح.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.houseNumber(class="form-control") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-8 field">
+                        {{ editProfileForm.location.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.location }})</span>
+                        {% if editProfileForm.location.errors %}
+                        {{ editProfileForm.location(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            يرجع ادخال موقع صالح.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.location(class="form-control") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 field">
+                        {{ editProfileForm.birthDate.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.birthDate.date }})</span>
+                        {% if editProfileForm.birthDate.errors %}
+                        {{ editProfileForm.birthDate(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            يرجى ادخال تاريخ صالح.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.birthDate(class="form-control") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 field">
+                        {{ editProfileForm.birthPlace.label(class="form-label") }}
+                        <span class="text-muted"> ({{ userData.birthPlace }})</span>
+                        {% if editProfileForm.birthPlace.errors %}
+                        {{ editProfileForm.birthPlace(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            يرجى ادخال مكان صالح.
+                        </div>
+                        {% else %}
+                        {{ editProfileForm.birthPlace(class="form-control") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-12 field">
+                        <a href="{{ url_for('users.changePassword' ) }}" class="btn btn-warning">تغيير كلمة المرور</a>
+                    </div>
+
+                </div>
+                {{ editProfileForm.submit(class="btn btn-success") }}
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/selectFieldAutoChange.js' ) }}"></script>
+{% endblock body %}

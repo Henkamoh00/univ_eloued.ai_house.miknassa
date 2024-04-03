@@ -1,0 +1,19 @@
+{% autoescape false %}
+    <div dir="rtl" style=" background-color: rgb(247, 242, 242); 
+                        margin: auto; 
+                        width: fit-content;
+                        padding: 20px; 
+                        border: 1px solid rgb(0, 0, 0); 
+                        border-radius: 8px; 
+                        /* box-shadow: 1px 1px 20px 1px rgb(34, 32, 32);  */
+                        font-size: 18px;">
+        <p>
+            لاستعادة كلمة المرور، قم بالنّقر على الرابط التالي:
+            <br><br>
+            {{ link }}
+            <br>
+            إذا لم تقم بهذا الطلب، الرّجاء تجاهل هذا البريد الإلكتروني.
+        </p>
+
+    </div>
+{% endautoescape %}

@@ -1,0 +1,16 @@
+<nav>
+    <div class="content">
+        <div class="logo">MIKNASSA</div>
+        <div class="list">
+            <a href="#1">مكنسة</a>
+            <a href="#2">الفريق</a>
+            <a href="#3">الخدمات</a>
+            <a href="#4">الشركاء</a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('users.logout' ) }}" id="logout">خروج</a>
+            {% else %}
+            <a href="#5" id="navJoin">انضمام</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

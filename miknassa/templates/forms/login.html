@@ -1,0 +1,181 @@
+{% extends 'layoutWithBootstrap.html' %}
+
+{% block body %}
+{% include 'additions/flashMessages.html' %}
+
+<div class="container loginContainer">
+    <div class="forms">
+        <div class="formBtns">
+            <p class="formBtn joinBtn" onclick="toggleForm('join')">انضمام</p>
+            <p class="formBtn enterBtn" onclick="toggleForm('login')">دخول</p>
+        </div>
+        <div class="formBox">
+
+            <form method="POST" id="loginForm">
+                {{ loginForm.hidden_tag() }}
+                <div class="row">
+                    <div class="col-12 field">
+                        {{ loginForm.email.label(class="form-label") }}
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">@</span>
+                            {{ loginForm.email(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="col-12 field">
+                        {{ loginForm.password.label(class="form-label") }}
+                        {{ loginForm.password(class="form-control") }}
+                    </div>
+                    <div class="col-12 field form-check">
+                        {{ loginForm.remember.label(class="form-check-label") }}
+                        {{ loginForm.remember(type="checkbox", class="form-check-input") }}
+                    </div>
+                    {{ loginForm.submit(class="btn btn-primary") }}
+                </div>
+
+                <small class="text-muted float-right mt-3">
+                    <a href="{{ url_for('users.forgotPassword' ) }}">هل نسيت كلمة المرور؟</a>
+                </small>
+            </form>
+
+            <!-- --------------------------------------------------------------------------- -->
+
+            <form method="POST" id="joinForm">
+                {{ joinForm.hidden_tag() }}
+                <div class="row g-3">
+                    <div class="col-sm-6 field">
+                        {{ joinForm.firstName.label(class="form-label") }}
+                        {% if joinForm.firstName.errors %}
+                        {{ joinForm.firstName(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            يرجى إدخال اسم أول صحيح.
+                        </div>
+                        {% else %}
+                        {{ joinForm.firstName(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-6 field">
+                        {{ joinForm.lastName.label(class="form-label") }}
+                        {% if joinForm.lastName.errors %}
+                        {{ joinForm.lastName(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            يرجى إدخال اسم عائلة صحيح.
+                        </div>
+                        {% else %}
+                        {{ joinForm.lastName(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="col-12 field">
+                        {{ joinForm.username.label(class="form-label") }}
+                        {% if joinForm.username.errors %}
+                        {{ joinForm.username(class="form-control is-invalid", placeholder="اسم المستخدم") }}
+                        <div class="invalid-feedback">
+                            اسم المستخدم الخاص بك مطلوب.
+                        </div>
+                        {% else %}
+                        {{ joinForm.username(class="form-control", placeholder="اسم المستخدم") }}
+                        {% endif %}
+                    </div>
+                    <div class="col-12 field">
+                        {{ joinForm.gender.label(class="form-label") }}
+                        {{ joinForm.gender(class="form-select") }}
+                    </div>
+                    <div class="col-12 field">
+                        {{ joinForm.email.label(class="form-label") }}<span class="text-muted">(اجباري)</span>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">@</span>
+                            {% if joinForm.email.errors %}
+                            {{ joinForm.email(class="form-control is-invalid", placeholder="you@example.com") }}
+                            <div class="invalid-feedback">
+                                يرجى إدخال عنوان بريد إلكتروني صحيح.
+                            </div>
+                            {% else %}
+                            {{ joinForm.email(class="form-control", placeholder="you@example.com") }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-12 field">
+                        {{ joinForm.phoneNumber.label(class="form-label") }}<span class="text-muted">(اجباري)</span>
+                        {% if joinForm.phoneNumber.errors %}
+                        {{ joinForm.phoneNumber(class="form-control is-invalid", placeholder="333 555 0666") }}
+                        <div class="invalid-feedback">
+                            يرجى إدخال عنوان رقم هاتف صحيح.
+                        </div>
+                        {% else %}
+                        {{ joinForm.phoneNumber(class="form-control", placeholder="333 555 0666") }}
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-md-4 field">
+                        {{ joinForm.wilaya.label(class="form-label", for="wilayaId") }}
+                        {% if joinForm.wilaya.errors %}
+                        {{ joinForm.wilaya(class="form-select is-invalid", id="wilayaId") }}
+                        <div class="invalid-feedback">
+                            يرجى اختيار ولاية.
+                        </div>
+                        {% else %}
+                        {{ joinForm.wilaya(class="form-select", id="wilayaId") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4 field">
+                        {{ joinForm.dayra.label(class="form-label", for="dayraId") }}
+                        {% if joinForm.dayra.errors %}
+                        {{ joinForm.dayra(class="form-select is-invalid", id="dayraId") }}
+                        <div class="invalid-feedback">
+                            يرجى اختيار دائرة.
+                        </div>
+                        {% else %}
+                        {{ joinForm.dayra(class="form-select", id="dayraId") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4 field">
+                        {{ joinForm.municipality.label(class="form-label", for="municipalityId") }}
+                        {% if joinForm.municipality.errors %}
+                        {{ joinForm.municipality(class="form-select is-invalid", id="municipalityId") }}
+                        <div class="invalid-feedback">
+                            يرجى اختيار بلدية.
+                        </div>
+                        {% else %}
+                        {{ joinForm.municipality(class="form-select", id="municipalityId") }}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-12 field">
+                        {{ joinForm.password.label(class="form-label") }}
+                        {% if joinForm.password.errors %}
+                        {{ joinForm.password(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in joinForm.password.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        {{ joinForm.password(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-12 field">
+                        {{ joinForm.confirmPassword.label(class="form-label") }}
+                        {% if joinForm.confirmPassword.errors %}
+                        {{ joinForm.confirmPassword(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in joinForm.confirmPassword.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        {{ joinForm.confirmPassword(class="form-control") }}
+                        {% endif %}
+                    </div>
+                </div>
+                {{ joinForm.submit(class="btn btn-primary") }}
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="{{ url_for('static', filename='js/login.js' ) }}"></script>
+<script src="{{ url_for('static', filename='js/selectFieldAutoChange.js' ) }}"></script>
+{% endblock body %}

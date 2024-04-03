@@ -1,0 +1,132 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% include 'parts/header.html'   %}
+<script src="{{ url_for('static', filename='js/backgroundScript.js') }}"></script>
+
+<main>
+    <section id="1">
+        <h2>مشروع مكنسة</h2>
+        <div class="about">
+            <img src="{{ url_for('static', filename='images/1.png') }}" alt="">
+            <div>
+                <p>الشركة نفسها هي شركة ناجحة جدا. ولكننا لا نقود المستمتعين أبدًا بقسوة أكثر مما قيل له، وحتى لا يعلموا أنه سيتبعه آلام، لأنك ترى في التدريب الذي برفضه المباركين قد حلوا بمشكلة عظيمة. سبب! ما هو نوع الرفض الذي يعيقه؟ سأأتي لمن، ولكن متعة عدم الاختيار هنا، فأنت ترى من هذه الأشياء حيث يجب اتباع بعض الواجبات، فهو يبحث عن ملذات ولدت لنا طرقًا لطيفة للرفض، لأنه يهرب من الألم لأنه! وأن يُطرد، وفيه متاعب وآلام، لا أحد يعلم هل فيهم لين، ومن يخفف عنهم الآلام، أليس كذلك؟ لقد أعمتهم عواقب اتباع الأوقات العصيبة، ويجب العفو عنهم، وهذه وسائل الراحة والملذات اختيارية؛ في الواقع، لا شيء يقع في هذه الحياة يمنع اللطيف من النفعي. سأشرح آلام وآلام هذا الاختيار بالإطراء. أكرم من يريد ألا يحدث لنا كل المشاكل والملذات! إنهم لا يختارون أبدًا، لكنهم يوفرون فرصة عظيمة. لنا، فليكن تمييزًا، حتى بالنسبة للبعض الذين في هذا الوقت نفسه، من لا شيء سوى الملذات، فهذه هي المشاكل التي تنفع فيها الآلام!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="2">
+        <div class="team">
+            <h2>فريق المشروع</h2>
+            <div class="content">
+                <div class="card">
+                    <img loading="lazy" src="{{ url_for('static', filename='images/2.png') }}" alt="team member image">
+                    <div class="data">
+                        <h3>محمد</h3>
+                        <p>باحث</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img loading="lazy" src="{{ url_for('static', filename='images/2.png') }}" alt="team member image">
+                    <div class="data">
+                        <h3>سامي</h3>
+                        <p>تقني الكترونيات</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img loading="lazy" src="{{ url_for('static', filename='images/2.png') }}" alt="team member image">
+                    <div class="data">
+                        <h3>علي</h3>
+                        <p>مطور برمجيات</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="3">
+        <div class="services">
+            <h2>الخدمات</h2>
+            <div class="content">
+                <div class="card">
+                    <img loading="lazy" src="{{ url_for('static', filename='images/1.png') }}" alt="service image">
+                    <div class="data">
+                        <h3>الخدمة 1</h3>
+                        <p>الشركة نفسها هي شركة ناجحة جدا. كمهندس معماري، إنه لمن دواعي سروري أن أكون مسؤولاً عن واجبات المكتب.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img loading="lazy" src="{{ url_for('static', filename='images/1.png') }}" alt="service image">
+                    <div class="data">
+                        <h3>الخدمة 2</h3>
+                        <p>الشركة نفسها هي شركة ناجحة جدا. كمهندس معماري، إنه لمن دواعي سروري أن أكون مسؤولاً عن واجبات المكتب.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img loading="lazy" src="{{ url_for('static', filename='images/1.png') }}" alt="service image">
+                    <div class="data">
+                        <h3>الخدمة 3</h3>
+                        <p>الشركة نفسها هي شركة ناجحة جدا. كمهندس معماري، إنه لمن دواعي سروري أن أكون مسؤولاً عن واجبات المكتب.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="4">
+        <div class="partners">
+            <h2>الشركاء</h2>
+            <div class="content">
+                <div class="card">
+                    <img loading="lazy" src="{{ url_for('static', filename='images/2.png') }}" alt="partner image">
+                    <div class="data">
+                        <h3>البلدية</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <img loading="lazy" src="{{ url_for('static', filename='images/2.png') }}" alt="partner image">
+                    <div class="data">
+                        <h3>دار الذكاء الاصطناعي</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <img loading="lazy" src="{{ url_for('static', filename='images/2.png') }}" alt="partner image">
+                    <div class="data">
+                        <h3>جامعة الوادي</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if not current_user.is_authenticated %}
+    <section id="5">
+        <div class="join">
+            <div class="content">
+                <p>سارع وكن جزءًا من مجتمعنا</p>
+                <a href="{{ url_for('users.login' ) }}">انضمام</a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <section>
+        <div class="content">
+            <div class="map">
+                <iframe loading="lazy" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d918.5924195128173!2d6.858102682037836!3d33.39523922304687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sar!2sdz!4v1708380536979!5m2!1sar!2sdz" style="border:0;" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="contact">
+                <p>رقم الهاتف</p><span>0666 555 333</span>
+                <p>البريد الالكتروني</p><span>miknassa@gmail.com</span>
+                <p>العنوان</p><span>الجزائر الوادي - جامعة الوادي</span>
+            </div>
+        </div>
+    </section>
+
+</main>
+<footer>
+    <div class="copyright">
+        <span>&nbsp;Copyright©2024</span>
+    </div>
+</footer>
+{% endblock body %}

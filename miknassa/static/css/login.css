@@ -1,0 +1,98 @@
+* {
+    padding: 0;
+    margin: 0;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+    direction: rtl;
+}
+
+body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    text-align: right;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+}
+
+.loginContainer {
+    margin: 10vh auto;
+}
+
+/* ************************************************************* */
+
+.forms {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 1px 1px 30px 1px rgb(255, 249, 249), -1px -1px 10px 1px rgb(163, 153, 153);
+
+}
+
+.formBox {
+    flex: 0 0 auto;
+    background-color: #f8f9fa;
+    padding: 20px 5vw;
+    width: 100%;
+    border-radius: 8px;
+}
+
+form {
+    text-align: right;
+}
+
+.field {
+    margin-bottom: 20px;
+}
+
+.formBtns {
+    flex: 0 0 auto;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.formBtn {
+    flex: 0 0 auto;
+    width: 50%;
+    text-align: center;
+    padding: 10px 5px;
+    font-size: 1.5em;
+    font-weight: 900;
+    color: rgb(54, 49, 49);
+}
+.formBtn:hover {
+    cursor: pointer;
+    font-size: 1.6em;
+    color: black;
+}
+
+.joinBtn {
+    background-color: aqua;
+    border-radius: 0px 8px 8px 0px;
+}
+
+.enterBtn {
+    background-color: skyblue;
+    border-radius: 8px 0px 0px 8px;
+}
+
+
+/* ******************************* edit profile ********************* */
+
+#fileUpload {
+    display: none;
+}
+
+.btnFile:active,.btnFile:visited,.btnFile:focus-visible {
+    background-color: black;
+}

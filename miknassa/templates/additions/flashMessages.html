@@ -1,0 +1,13 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert_ alert_{{category}}" id="alert_">
+    <img src="{{ url_for('static', filename='images/alertIcons/' + category + '.png') }}" alt=""/>
+    <span>{{ message }}</span>
+</div>
+
+<script src="{{ url_for('static', filename='js/alertTimeout.js') }}"></script>
+{% endfor %}
+{% endif %}
+{% endwith %}

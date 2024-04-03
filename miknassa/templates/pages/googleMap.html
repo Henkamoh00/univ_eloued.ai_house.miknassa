@@ -1,0 +1,13 @@
+
+{% extends 'layoutWithBootstrap.html' %}
+{% block body %}
+{% include 'additions/flashMessages.html' %}
+
+<h1>التطبيق..</h1>
+<div style="text-align: center !important; direction: ltr !important;">
+    <div id="map" style="height: 70vh; width: 100%; text-align: center !important;"></div>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAa5wziHjN2Dq5vVzxNStJyMbMkhSCXWSI"></script>
+<script src="{{ url_for('static', filename='js/app.js' ) }}"></script>
+{% endblock body %}

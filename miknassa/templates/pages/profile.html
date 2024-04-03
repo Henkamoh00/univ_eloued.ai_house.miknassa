@@ -1,0 +1,87 @@
+{% extends 'layoutWithBootstrap.html' %}
+
+{% block body %}
+{% include 'additions/flashMessages.html' %}
+
+<div class="container loginContainer">
+    <div class="forms">
+        <div class="formBox">
+            <div class="row g-3">
+
+                <div class="col-12 field">
+                    <img src="{{ image }}" alt="صورة الحساب" width="150px" height="150px">
+                </div>
+
+                <div class="col-sm-6 field">
+                    <p class="form-label"> الاسم الأول</p>
+                    <input class="form-control" type="" value="{{ userData.firstName }}" disabled readonly>
+                </div>
+                <div class="col-sm-6 field">
+                    <p class="form-label"> الاسم الأخير</p>
+                    <input class="form-control" type="" value="{{ userData.lastName }}" disabled readonly>
+                </div>
+                <div class="col-sm-8 field">
+                    <p class="form-label"> اسم المستخدم</p>
+                    <input class="form-control" type="" value="{{ userData.username }}" disabled readonly>
+                </div>
+                <div class="col-sm-4 field">
+                    <p class="form-label"> الجنس</p>
+                    {% if userData.gender == 'male' %}
+                    <input class="form-control" type="" value="ذكـر" disabled readonly>
+                    {% else %}
+                    <input class="form-control" type="" value="انثـى" disabled readonly>
+                    {% endif %}
+                </div>
+                <div class="col-12 field">
+                    <p class="form-label"> البريد الإلكتروني</p>
+                    <input class="form-control" type="" value="{{ userData.email }}" disabled readonly>
+                </div>
+                <div class="col-12 field">
+                    <p class="form-label"> رقم الهاتف</p>
+                    <input class="form-control" type="" value="{{ userData.phoneNumber }}" disabled readonly>
+                </div>
+
+                <div class="col-md-4 field">
+                    <p class="form-label"> الولاية</p>
+                    <input class="form-control" type="" value="{{ address.wilaya }}" disabled readonly>
+                </div>
+
+                <div class="col-md-4 field">
+                    <p class="form-label"> الدائرة</p>
+                    <input class="form-control" type="" value="{{ address.dayra }}" disabled readonly>
+                </div>
+
+                <div class="col-md-4 field">
+                    <p class="form-label"> البلدية</p>
+                    <input class="form-control" type="" value="{{ address.municipality }}" disabled readonly>
+                </div>
+
+                <div class="col-md-4 field">
+                    <p class="form-label"> رقم الدار</p>
+                    <input class="form-control" type="" value="{{ userData.houseNumber }}" disabled readonly>
+                </div>
+
+                <div class="col-md-8 field">
+                    <p class="form-label"> العنوان الجغرافي</p>
+                    <input class="form-control" type="" value="{{ userData.location }}" disabled readonly>
+                </div>
+
+                <div class="col-md-6 field">
+                    <p class="form-label"> تاريخ الميلاد</p>
+                    <input class="form-control" type="" value="{{ userData.birthDate }}" disabled readonly>
+                </div>
+
+                <div class="col-md-6 field">
+                    <p class="form-label"> مكان الميلاد</p>
+                    <input class="form-control" type="" value="{{ userData.birthPlace }}" disabled readonly>
+                </div>
+
+            </div>
+            <a href="{{ url_for('users.editProfile' ) }}" class="btn btn-success mt-5">تعديل الحساب</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock body %}

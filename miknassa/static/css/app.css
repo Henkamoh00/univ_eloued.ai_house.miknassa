@@ -1,0 +1,91 @@
+* {
+    padding: 0;
+    margin: 0;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+    direction: rtl;text-align: right;
+}
+
+body {
+    /* font-family: Roboto,Arial,sans-serif; */
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+}
+a:hover {
+    text-decoration: none !important;
+    color: black !important;
+}
+
+#map {
+    height: 100vh;
+    min-width: 100vw;
+}
+
+.markerInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1111111;
+    overflow: auto;
+    
+    background: white;
+    padding: 20px;
+    height: auto;
+    max-height: 600px;
+    min-height: 400px;
+    width: calc(40vw - 20px);
+    max-width: 400px;
+    min-width: 350px;
+
+    border-radius: 8px;
+    box-shadow: 1px 1px 20px 1px rgb(29, 28, 28);
+}
+
+.markerInfo h1 {
+    flex: 0 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.markerInfo .contentInfo {
+    flex: 0 0 auto;
+    display: flex;
+    flex-flow: column wrap;
+    height: fit-content;
+    width: 100%;
+    border: 1px solid lightgray;
+    padding: 20px;
+    overflow: hidden;
+}
+
+
+.markerInfo .info {
+    flex: 0 0 auto;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+    height: fit-content;
+}
+
+.markerInfo p, .markerInfo span {
+    flex: 0 0 auto;
+    font-size: 1.2em;
+    margin: 0 !important;
+    text-align: center;
+    width: 50%;
+}
+
+.contentInfo p {
+    font-weight: bold;
+    text-align: right;
+}

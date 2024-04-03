@@ -1,0 +1,509 @@
+* {
+    padding: 0;
+    margin: 0;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+    direction: rtl;
+}
+
+body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+}
+a:hover {
+    text-decoration: none !important;
+    color: black !important;
+}
+
+/* ********************************** genral **************************************** */
+
+.content {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    align-content: center;
+    align-items: stretch;
+    overflow: hidden;
+    padding-top: 5vh;
+    height: 100%;
+}
+
+.card {
+    all: unset;
+    flex: 0 0 auto;
+    word-wrap: break-word;
+    height: auto;
+    width: 15.625em;
+    min-width: 12.5em;
+    max-width: 25em;
+    margin: 0 5vh 5vh 5vh;
+    border-radius: 0.25em;
+    -webkit-border-radius: 0.25em;
+    -moz-border-radius: 0.25em;
+    -ms-border-radius: 0.25em;
+    -o-border-radius: 0.25em;
+}
+
+.card img {
+    width: 15.625em;
+    min-width: 100%;
+    height: 15.625em;
+    min-height: 70%;
+}
+
+.card .data{
+    text-align: center;
+    min-height: 2.5em;
+}
+
+.card .data p {
+    padding: 0.625em 0;
+}
+
+h2 {
+    text-align: center;
+    padding: 0.5em;
+    background-color: var(--color3);
+    font-size: 2.5em;
+    border-radius: 0.625em;
+    -webkit-border-radius: 0.625em;
+    -moz-border-radius: 0.625em;
+    -ms-border-radius: 0.625em;
+    -o-border-radius: 0.625em;
+}
+
+/* ************************************** navbar *********************************** */
+
+nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5;
+}
+
+nav .content{
+    padding: 0px;
+    min-height: 50px;
+    justify-content: space-around;
+    align-content: center;
+    align-items: center;
+    width: 100vw;
+}
+
+.logo {
+    flex: 0 0 auto;
+    padding: 5px 15px;
+    font-size: 2em;
+    font-weight: bolder;
+    -webkit-text-stroke-color: red;
+    -webkit-text-stroke-width: medium;
+}
+
+.list {
+    flex: 0 1 auto;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    text-align: center;
+    height: fit-content;
+    padding: 5px 15px;
+}
+
+.list a {
+    flex: 0 0 auto;
+    color: white !important;
+    width: fit-content;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 5px 10px;
+}
+
+.list a:hover {
+    border-bottom: 1px skyblue solid;
+    color: aqua !important;
+    padding-bottom: 4px;
+}
+
+#navJoin {
+    color: aqua !important;
+    font-size: 1.5em;
+    line-height: 1.2em;
+    border-bottom: 1px skyblue dotted;
+}
+
+#navJoin:hover {
+    border-bottom: 1px blue solid;
+    color: blue !important;
+}
+
+#logout {
+    color: rgb(232, 31, 4) !important;
+}
+
+#logout:hover {
+    border-bottom: 1px red solid;
+    color: red !important;
+}
+
+/* ************************************** header *********************************** */
+
+header {
+    position: relative;
+    min-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 750px;
+    overflow: hidden;
+    color: white;
+}
+
+.video {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+#video-background {
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .motto {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-content: space-around;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(31,39,43,0.7);
+    padding: 0 40px;
+    overflow: hidden;
+  }
+
+  .headerText {
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: 800px;
+    text-align: justify;
+  }
+
+    .headerText h1 {
+        width: 100%;
+    }
+
+    .headerText p {
+        width: 100%;
+    }
+    
+  .headerImage {
+    flex: 0 1 auto;
+    max-width: 300px;
+    height: auto;
+  }
+
+  .headerImage img {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    border-radius: 8px;
+    box-shadow: 1px 1px 20px 1px rgb(236, 230, 230);
+  }
+
+/* ************************************** main *********************************** */
+
+main {
+    width: 80vw;
+    margin: auto;
+    overflow: hidden;
+}
+
+main section {
+    padding: 10vh 0 0;
+    height: fit-content;
+}
+
+/* ************************************** header *********************************** */
+
+.about {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+    padding-top: 5vh;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 1px 1px 10px 1px #d9dadd;
+}
+
+.about img {
+    flex: 0 0 auto;
+    display: inline-block;
+    width: 20em;
+    min-height: 20em;
+    margin: 10px;
+    border-radius: 8px;
+}
+
+.about div {
+    flex: 0 0 auto;
+    display: inline-block;
+    width: 100%;
+    max-width: 60%;
+    margin: 10px;
+    font-size: 1.2em;
+}
+
+/* ************************************** our team *********************************** */
+
+.team .content .card img{
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+.team .content .card .data{
+    height: auto;
+}
+
+/* ************************************** services *********************************** */
+
+.services .content .card img{
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+/* ************************************** partners *********************************** */
+
+.partners .content .card {
+    text-align: center;
+    height: auto;
+    box-shadow: 1px 1px 10px 1px rgb(236, 230, 230);
+}
+
+.partners .content .card img{
+    border-radius: 8px 8px 0 0;
+}
+
+.partners .content .card .data h3 {
+    background-color: var(--color3);
+    border-radius: 0.9375em;
+    padding: 0.4em 0;
+    height: 2.8125em;
+    -webkit-border-radius: 0.9375em;
+    -moz-border-radius: 0.9375em;
+    -ms-border-radius: 0.9375em;
+    -o-border-radius: 0.9375em;
+}
+
+/* ************************************** join *********************************** */
+
+.join .content{
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 5vh;
+    min-height: 300px;
+}
+
+.join .content p {
+    flex: 0 0 auto;
+    font-size: 4em;
+    font-weight: bolder;
+    text-align: center;
+    margin-bottom: 5vh;
+    -webkit-text-stroke-color: skyblue;
+    -webkit-text-stroke-width: medium;
+}
+
+.join .content a {
+    flex: 0 0 auto;
+    font-size: larger;
+    font-size: 2em;
+    border: 1px solid rgb(194, 187, 187);
+    border-radius: 8px;
+    padding: 5px 15px;
+    box-shadow: 1px 1px 20px 1px skyblue;
+    background-color: lightskyblue;
+    color: white;
+}
+
+.join .content a:hover {
+    font-weight: bold;
+    color: black;
+    padding: 7px 17px;
+}
+
+/* ************************************** map *********************************** */
+
+.map {
+    flex: 0 1 auto;
+    background-color: #bbbbbb8f;
+    max-width: 800px;
+    width: 60%;
+    min-width: 350px;
+    height: 40vh;
+    text-align: center;
+    order: 2;
+}
+.map iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.contact {
+    order: 1;
+}
+
+/* ************************************** contact *********************************** */
+
+.contact {
+    flex: 0 1 auto;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: flex-start;
+    padding: 50px 20px;
+    padding-right: 0;
+    padding-top: 0;
+}
+
+.contact p {
+    flex: 0 1 auto;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 1em;
+    margin-bottom: .5em;
+}
+
+.contact span {
+    flex: 0 1 auto;
+    font-size: 1.2em;
+}
+
+/* ************************************** footer *********************************** */
+
+.copyright {
+    flex: 0 0 auto;
+    order: 3;
+    width: 100%;
+    border-top: black 1px solid;
+    margin-top: 2em;
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    padding: 2em;
+}
+
+.copyright span {
+    flex: 0 0 auto;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 2em;
+    padding: 0.5em 2em;
+}
+
+.copyright span a {
+    flex: 0 0 auto;
+    text-decoration:none;
+    color:black;
+}
+
+
+/*============================= Alert box part =============================*/
+
+.alert_ {
+    position: absolute;
+    z-index: 5;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+    text-align: center;
+    font-weight: 100;
+    font-size: 1.2em;
+    word-break: break-word;
+    padding: 10px 30px;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -webkit-border-radius: .25rem;
+    -moz-border-radius: .25rem;
+    -ms-border-radius: .25rem;
+    -o-border-radius: .25rem;
+}
+
+.alert_ span {
+    vertical-align: middle;
+}
+
+.alert_ img {
+    width: 2em;
+    height: 2em;
+    vertical-align: middle;
+}
+  
+.alert_success {
+    color: #155724;
+    background: #d4edda url(../images/svg/icon-yes.svg) 40px 12px repeat;
+    border-color: #c3e6cb;
+}
+
+.alert_info {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+
+
+.alert_debug {
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+}
+
+
+.alert_warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+
+.alert_error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
