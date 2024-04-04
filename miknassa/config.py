@@ -7,7 +7,7 @@ class Config:
     
     SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
     # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root@localhost/miknassa' # يستخدم مكتبية مختلفة للاتصال بقاعدة البيانات
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # لحماية الكوكيز
     SESSION_COOKIE_SAMESITE = 'None'
