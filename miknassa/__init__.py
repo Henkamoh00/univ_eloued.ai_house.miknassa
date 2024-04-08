@@ -39,9 +39,11 @@ def createApp(config_class=Config):
     from miknassa.main.routes import mainBp
     from miknassa.users.routes import usersBp
     from miknassa.application.routes import appBp
+    from miknassa.api.myApi import apiBp
 
     app.register_blueprint(mainBp)
     app.register_blueprint(usersBp)
     app.register_blueprint(appBp)
+    app.register_blueprint(apiBp)
 
     return app
