@@ -13,7 +13,7 @@ db = SQLAlchemy()
 
 bcrypt = Bcrypt()
 
-migrate = Migrate(db)
+migrate = Migrate()
 
 loginManager = LoginManager()
 loginManager.login_view = 'users.login'
@@ -32,7 +32,7 @@ def createApp(config_class=Config):
 
     db.init_app(app)
     bcrypt.init_app(app)
-    migrate.init_app(app)
+    migrate.init_app(app, db)
     loginManager.init_app(app)
     mail.init_app(app)
 

@@ -55,7 +55,6 @@ def login():
                     return redirect(nextPage) if nextPage else redirect(url_for('application.dashboard'))
                 else:
                     flash(f"يوجد خلل في الحساب", 'error')
-                    # return redirect('logout')
             else:
                 flash(f"فشل تسجيل الدخول، حاول مجدّدًا.", 'error')
     
