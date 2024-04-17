@@ -32,6 +32,7 @@ class User(db.Model, UserMixin):
 
     r_trucksReport = db.relationship('TrucksReport', backref='reporter', lazy=True, cascade="all, delete-orphan")
     r_truck = db.relationship('Truck', backref='driver', lazy=True, cascade="all, delete-orphan")
+    r_garbageAlert = db.relationship('GarbageAlert', backref='alerter', lazy=True, cascade="all, delete-orphan")
 
     def getResetToken(self):
         s = Serializer(current_app.config['SECRET_KEY'], salt='pw-reset')
@@ -114,6 +115,7 @@ class Truck(db.Model):
     truckTypeId = db.Column(db.Integer, db.ForeignKey('truckTypes.id'), nullable=False)
     
     r_trucksReport = db.relationship('TrucksReport', backref='reportOn', lazy=True, cascade="all, delete-orphan")
+    r_operation = db.relationship('Operation', backref='performer', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"{{'id': {self.id}, 'matricule': {self.matricule}, 'userId': {self.userId}, 'truckTypeId': {self.truckTypeId}}}"
@@ -143,3 +145,32 @@ class TrucksReport(db.Model):
 
     def __repr__(self):
         return f"{{'id': {self.id}, 'truckId': {self.truckId}, 'userId': {self.userId}, 'location': {self.location}, 'date': {self.date}, 'content': {self.content}}}"
+    
+
+class GarbageAlert(db.Model):
+    __tablename__ = 'garbageAlerts'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    userId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    location = db.Column(db.String(30), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    picture = db.Column(db.String(50), nullable=True) 
+
+    r_operation = db.relationship('Operation', backref='taskAlert', lazy=True, cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"{{'id': {self.id}, 'userId': {self.userId}, 'location': {self.location}, 'date': {self.date}, 'picture': {self.picture}}}"
+    
+
+class Operation(db.Model):
+    __tablename__ = 'operations'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    truckId = db.Column(db.Integer, db.ForeignKey('trucks.id'), nullable=False)
+    alertId = db.Column(db.Integer, db.ForeignKey('garbageAlerts.id'), nullable=False)
+    location = db.Column(db.String(30), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"{{'id': {self.id}, 'truckId': {self.truckId}, 'alertId': {self.alertId}, 'location': {self.location}, 'date': {self.date}}}"
+    
