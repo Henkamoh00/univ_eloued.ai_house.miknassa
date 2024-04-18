@@ -30,26 +30,6 @@ def loginUser():
     return jsonify({"error": "User not found"}), 404
 
 
-# لاستقبال صورة القمامة api
-@apiBp.route("/rubbish_pic", methods=["POST"])
-def rubbishPic():
-    if "image" not in request.files:
-        return jsonify({"error": "No image part in the request"}), 400
-
-    image = request.files["image"]
-
-    if image.filename == "":
-        return jsonify({"error": "No selected image"}), 400
-
-    if image:
-        image = renameImage(image.filename, "media/alert")
-        # user.imageFile = image
-        return jsonify({"message": "Image uploaded successfully", "image_path": image.filename}), 200
-
-    return jsonify({"error": "Unknown error occurred"}), 500
-
-
-
 # لاستقبال التنبيه api
 @apiBp.route("/garbage_alert", methods=["POST"])
 def garbageAlert():
@@ -84,3 +64,24 @@ def garbageAlert():
     
 
     return "", 200
+
+
+
+
+# # لاستقبال صورة القمامة api
+# @apiBp.route("/rubbish_pic", methods=["POST"])
+# def rubbishPic():
+#     if "image" not in request.files:
+#         return jsonify({"error": "No image part in the request"}), 400
+
+#     image = request.files["image"]
+
+#     if image.filename == "":
+#         return jsonify({"error": "No selected image"}), 400
+
+#     if image:
+#         image = renameImage(image.filename, "media/alert")
+#         # user.imageFile = image
+#         return jsonify({"message": "Image uploaded successfully", "image_path": image.filename}), 200
+
+#     return jsonify({"error": "Unknown error occurred"}), 500
