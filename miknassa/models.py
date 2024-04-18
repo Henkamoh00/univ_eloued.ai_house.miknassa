@@ -139,7 +139,7 @@ class TrucksReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     truckId = db.Column(db.Integer, db.ForeignKey('trucks.id'), nullable=False)
     userId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    location = db.Column(db.String(30), nullable=False)
+    location = db.Column(db.String(120), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.String(255), nullable=False)
 
@@ -152,7 +152,7 @@ class GarbageAlert(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     userId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    location = db.Column(db.String(30), nullable=False)
+    location = db.Column(db.String(120), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     picture = db.Column(db.String(50), nullable=True) 
 
@@ -168,7 +168,7 @@ class Operation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     truckId = db.Column(db.Integer, db.ForeignKey('trucks.id'), nullable=False)
     alertId = db.Column(db.Integer, db.ForeignKey('garbageAlerts.id'), nullable=False)
-    location = db.Column(db.String(30), nullable=False)
+    location = db.Column(db.String(120), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
