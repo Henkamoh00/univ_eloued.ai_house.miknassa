@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     firstName = db.Column(db.String(25), nullable=False)
     lastName = db.Column(db.String(25), nullable=False)
     username = db.Column(db.String(30), nullable=False, unique=True)
-    gender = db.Column(db.Enum('male', 'female'), nullable=False)
+    gender = db.Column(db.Enum('male', 'female', name='gender_enum'), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
     phoneNumber = db.Column(db.String(15), nullable=False)
     municipalityId = db.Column(db.Integer, db.ForeignKey('municipalities.id'), nullable=False)

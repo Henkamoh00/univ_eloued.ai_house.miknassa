@@ -4,7 +4,6 @@ import secrets, os
 from PIL import Image
 from geopy.geocoders import Nominatim
 
- 
 
 
 
