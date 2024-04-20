@@ -10,7 +10,7 @@ limiter = Limiter(apiBp)
 
 # لاستقبال بيانات تسجيل الدخول api
 @apiBp.route("/users", methods=["POST"])
-# @limiter.limit('5 per minute', key_func=lambda: request.remote_addr)
+@limiter.limit('5 per minute', key_func=lambda: request.remote_addr)
 def loginUser():
     data = request.json
     email = data.get("email")
@@ -22,7 +22,7 @@ def loginUser():
     if user and bcrypt.check_password_hash(user.password, password):
         return (
             jsonify(
-                {"email": user.email, "fName": user.firstName, "lName": user.lastName}
+                {"username": user.username, "id": user.id, "image": user.id}
             ),
             200,
         )
@@ -33,38 +33,73 @@ def loginUser():
 # لاستقبال التنبيه api
 @apiBp.route("/garbage_alert", methods=["POST"])
 def garbageAlert():
-    picPath = ""
 
-    latitude = request.form.get("latitude")
-    longitude = request.form.get("longitude")
-    
+    data = request.json
+    userId = data.get("userId")
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
+    print(userId)
+    print(latitude)
+    print(longitude)
     if not latitude or not longitude:
-        return "", 400
+        return "لا توجد بيانات مستلمة"+latitude, 400
 
+    userId = int(userId)
     latitude = float(latitude)
     longitude = float(longitude)
 
-    address = convert_coordinates_to_address(latitude, longitude)
+    # address = convert_coordinates_to_address(latitude, longitude)
+    address = location = f"{latitude}, {longitude}"
+    garbageAlert = GarbageAlert(
+        userId=userId,
+        location=address,
+        date=datetime.utcnow(),
+        picture="",
+    )
+    db.session.add(garbageAlert)
+    db.session.commit()
+
+    return "", 200
+
+
+# api لاستقبال التنبيه مع صورة
+@apiBp.route("/garbage_alert_with_pic", methods=["POST"])
+def garbageAlertPic():
+    picPath = ""
+
+    userId = request.form.get("userId")
+    latitude = request.form.get("latitude")
+    longitude = request.form.get("longitude")
+    print(userId)
+    print(latitude)
+    print(longitude)
+    if not latitude or not longitude or not userId:
+        return "لا توجد بيانات مستلمة", 400
+
+    userId = int(userId)
+    latitude = float(latitude)
+    longitude = float(longitude)
+
+    # address = convert_coordinates_to_address(latitude, longitude)
+    address = location = f"{latitude}, {longitude}"
 
     if "image" in request.files:
         image_file = request.files["image"]
-        picPath = renameImage(image_file.filename, "media/alert")
+        picPath = renameImage(image_file, "media/alert")
+    else:
+        return "لا توجد صورة مستلمة"+latitude, 400
 
     garbageAlert = GarbageAlert(
-        userId=1,
+        userId=userId,
         location=address,
         date=datetime.utcnow(),
-        picture=picPath,
+        picture="alert/" + picPath,
     )
     db.session.add(garbageAlert)
     db.session.commit()
 
     if picPath != "":
         return jsonify({"message": "Image uploaded successfully", "image_path": picPath}), 200
-    
-
-    return "", 200
-
 
 
 
