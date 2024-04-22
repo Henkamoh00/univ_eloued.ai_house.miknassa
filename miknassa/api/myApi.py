@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_limiter import Limiter
 from miknassa.models import *
 from miknassa import bcrypt
-from miknassa.helper import renameImage, convert_coordinates_to_address
+from miknassa.helper import renameImage, convert_coordinates
 
 apiBp = Blueprint("api", __name__)
 limiter = Limiter(apiBp)
@@ -63,13 +63,13 @@ def garbageAlert():
     latitude = float(latitude)
     longitude = float(longitude)
 
-    # address = convert_coordinates_to_address(latitude, longitude)
-    address = location = f"{latitude}, {longitude}"
+    lat_str, lon_str = convert_coordinates(latitude, longitude)
+    address = f"{lat_str}{lon_str}"
     garbageAlert = GarbageAlert(
         userId=userId,
         location=address,
         date=datetime.utcnow(),
-        picture="",
+        # picture="",
     )
     db.session.add(garbageAlert)
     db.session.commit()
@@ -92,8 +92,8 @@ def garbageAlertPic():
     latitude = float(latitude)
     longitude = float(longitude)
 
-    # address = convert_coordinates_to_address(latitude, longitude)
-    address = location = f"{latitude}, {longitude}"
+    lat_str, lon_str = convert_coordinates(latitude, longitude)
+    address = f"{lat_str}{lon_str}"
 
     if "image" in request.files:
         image_file = request.files["image"]
