@@ -19,13 +19,31 @@ def loginUser():
         return jsonify({"error": "Missing email or password"}), 400
 
     user = User.query.filter_by(email=email).first()
+    address = Municipality.query.filter_by(id=user.municipalityId).first()
+
     if user and bcrypt.check_password_hash(user.password, password):
         return (
-            jsonify(
-                {"username": user.username, "id": user.id, "image": user.id}
-            ),
-            200,
-        )
+    jsonify(
+        {
+            "id": user.id,
+            "firstName": user.firstName,
+            "lastName": user.lastName,
+            "username": user.username,
+            "gender": user.gender,
+            "email": user.email,
+            "phoneNumber": user.phoneNumber,
+            "address": address.name,
+            "houseNumber": user.houseNumber,
+            "location": user.location,
+            # "birthDate": user.birthDate,
+            "birthPlace": user.birthPlace,
+            "userTypeId": user.userTypeId,
+            "imageFile": f"{request.host_url}media/{user.imageFile}",
+            # "joinDate": user.joinDate,
+        }
+    ),
+    200,
+)
 
     return jsonify({"error": "User not found"}), 404
 
@@ -38,9 +56,6 @@ def garbageAlert():
     userId = data.get("userId")
     latitude = data.get("latitude")
     longitude = data.get("longitude")
-    print(userId)
-    print(latitude)
-    print(longitude)
     if not latitude or not longitude:
         return "لا توجد بيانات مستلمة"+latitude, 400
 
@@ -70,9 +85,6 @@ def garbageAlertPic():
     userId = request.form.get("userId")
     latitude = request.form.get("latitude")
     longitude = request.form.get("longitude")
-    print(userId)
-    print(latitude)
-    print(longitude)
     if not latitude or not longitude or not userId:
         return "لا توجد بيانات مستلمة", 400
 
