@@ -58,11 +58,11 @@ def garbageAlert():
     longitude = data.get("longitude")
     if not latitude or not longitude or not userId:
         return "لا توجد بيانات مستلمة" + latitude, 400
-
+    print(type(longitude))
     userId = int(userId)
     latitude = float(latitude)
     longitude = float(longitude)
-
+    print(type(longitude))
     lat_str, lon_str = convert_coordinates(latitude, longitude)
     address = f"{lat_str}{lon_str}"
     garbageAlert = GarbageAlert(
@@ -87,11 +87,11 @@ def garbageAlertPic():
     longitude = request.form.get("longitude")
     if not latitude or not longitude or not userId:
         return "لا توجد بيانات مستلمة", 400
-
+    print(type(longitude))
     userId = int(userId)
     latitude = float(latitude)
     longitude = float(longitude)
-
+    print(type(longitude))
     lat_str, lon_str = convert_coordinates(latitude, longitude)
     address = f"{lat_str}{lon_str}"
 
@@ -117,12 +117,12 @@ def garbageAlertPic():
         )
 
 
-@apiBp.route("/garbage_alert", methods=["GET"])
+@apiBp.route("/get_garbage_alerts", methods=["GET"])
 def garbage_alert():
     try:
-        # استعلام قاعدة البيانات لجلب البيانات المطلوبة من جدول الحالات
+
         garbageAlerts = GarbageAlert.query.all()
-        # تحويل البيانات إلى قائمة من الدوائر
+
         data = [
             {
                 "id": garbageAlert.id,
@@ -131,10 +131,10 @@ def garbage_alert():
             }
             for garbageAlert in garbageAlerts
         ]
-        # استجابة بتنسيق JSON
+
         return jsonify(data), 200
     except Exception as e:
-        # في حالة حدوث خطأ، يمكن إرسال استجابة خطأ
+
         return jsonify({"error": str(e)}), 500
 
 
@@ -153,27 +153,26 @@ def newOperation():
     if not latitude or not longitude:
         return "لا توجد احداثيات مستلمة" + latitude, 400
 
+    garbageAlertId = int(garbageAlertId)
+    userId = int(userId)
     latitude = float(latitude)
     longitude = float(longitude)
 
     lat_str, lon_str = convert_coordinates(latitude, longitude)
     address = f"{lat_str}{lon_str}"
 
-    truckId = Truck.query.filter_by(userId=userId).first()
+    truck = Truck.query.filter_by(userId=userId).first()
 
-    garbageAlert = GarbageAlert(
-        id=garbageAlertId,
-        status=True,
-    )
+    garbageAlert = GarbageAlert.query.filter_by(id=garbageAlertId).first()
+    garbageAlert.status = True
 
     newOperation = Operation(
-        truckId=truckId.id,
+        truckId=truck.id,
         alertId=garbageAlertId,
         location=address,
         date=datetime.utcnow(),
     )
 
-    db.session.add(garbageAlert)
     db.session.add(newOperation)
     db.session.commit()
 
