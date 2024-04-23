@@ -56,7 +56,7 @@ def garbageAlert():
     userId = data.get("userId")
     latitude = data.get("latitude")
     longitude = data.get("longitude")
-    if not latitude or not longitude:
+    if not latitude or not longitude or not userId:
         return "لا توجد بيانات مستلمة" + latitude, 400
 
     userId = int(userId)
@@ -138,6 +138,7 @@ def garbage_alert():
         return jsonify({"error": str(e)}), 500
 
 
+@apiBp.route("/new_operation", methods=["POST"])
 def newOperation():
     data = request.json
 
@@ -150,7 +151,7 @@ def newOperation():
         return jsonify({"error": "Missing garbageAlertId or userId"}), 400
 
     if not latitude or not longitude:
-        return "لا توجد بيانات مستلمة" + latitude, 400
+        return "لا توجد احداثيات مستلمة" + latitude, 400
 
     latitude = float(latitude)
     longitude = float(longitude)
@@ -176,7 +177,7 @@ def newOperation():
     db.session.add(newOperation)
     db.session.commit()
 
-    return jsonify({"error": "User not found"}), 404
+    return "", 200
 
 
 # # لاستقبال صورة القمامة api
