@@ -10,7 +10,7 @@ limiter = Limiter(apiBp)
 
 # لاستقبال بيانات تسجيل الدخول api
 @apiBp.route("/users", methods=["POST"])
-@limiter.limit('5 per minute', key_func=lambda: request.remote_addr)
+@limiter.limit("5 per minute", key_func=lambda: request.remote_addr)
 def loginUser():
     data = request.json
     email = data.get("email")
@@ -23,27 +23,27 @@ def loginUser():
 
     if user and bcrypt.check_password_hash(user.password, password):
         return (
-    jsonify(
-        {
-            "id": user.id,
-            "firstName": user.firstName,
-            "lastName": user.lastName,
-            "username": user.username,
-            "gender": user.gender,
-            "email": user.email,
-            "phoneNumber": user.phoneNumber,
-            "address": address.name,
-            "houseNumber": user.houseNumber,
-            "location": user.location,
-            # "birthDate": user.birthDate,
-            "birthPlace": user.birthPlace,
-            "userTypeId": user.userTypeId,
-            "imageFile": f"{request.host_url}media/{user.imageFile}",
-            # "joinDate": user.joinDate,
-        }
-    ),
-    200,
-)
+            jsonify(
+                {
+                    "id": user.id,
+                    "firstName": user.firstName,
+                    "lastName": user.lastName,
+                    "username": user.username,
+                    "gender": user.gender,
+                    "email": user.email,
+                    "phoneNumber": user.phoneNumber,
+                    "address": address.name,
+                    "houseNumber": user.houseNumber,
+                    "location": user.location,
+                    # "birthDate": user.birthDate,
+                    "birthPlace": user.birthPlace,
+                    "userTypeId": user.userTypeId,
+                    "imageFile": f"{request.host_url}media/{user.imageFile}",
+                    # "joinDate": user.joinDate,
+                }
+            ),
+            200,
+        )
 
     return jsonify({"error": "User not found"}), 404
 
@@ -57,7 +57,7 @@ def garbageAlert():
     latitude = data.get("latitude")
     longitude = data.get("longitude")
     if not latitude or not longitude:
-        return "لا توجد بيانات مستلمة"+latitude, 400
+        return "لا توجد بيانات مستلمة" + latitude, 400
 
     userId = int(userId)
     latitude = float(latitude)
@@ -99,7 +99,7 @@ def garbageAlertPic():
         image_file = request.files["image"]
         picPath = renameImage(image_file, "media/alert")
     else:
-        return "لا توجد صورة مستلمة"+latitude, 400
+        return "لا توجد صورة مستلمة" + latitude, 400
 
     garbageAlert = GarbageAlert(
         userId=userId,
@@ -111,8 +111,31 @@ def garbageAlertPic():
     db.session.commit()
 
     if picPath != "":
-        return jsonify({"message": "Image uploaded successfully", "image_path": picPath}), 200
+        return (
+            jsonify({"message": "Image uploaded successfully", "image_path": picPath}),
+            200,
+        )
 
+
+@apiBp.route("/garbage_alert", methods=["GET"])
+def garbage_alert():
+    try:
+        # استعلام قاعدة البيانات لجلب البيانات المطلوبة من جدول الحالات
+        garbageAlerts = GarbageAlert.query.all()
+        # تحويل البيانات إلى قائمة من الدوائر
+        data = [
+            {
+                "id": garbageAlert.id,
+                "location": garbageAlert.location,
+                "status": garbageAlert.status,
+            }
+            for garbageAlert in garbageAlerts
+        ]
+        # استجابة بتنسيق JSON
+        return jsonify(data), 200
+    except Exception as e:
+        # في حالة حدوث خطأ، يمكن إرسال استجابة خطأ
+        return jsonify({"error": str(e)}), 500
 
 
 # # لاستقبال صورة القمامة api
