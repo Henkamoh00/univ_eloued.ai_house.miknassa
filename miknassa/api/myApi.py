@@ -138,6 +138,47 @@ def garbage_alert():
         return jsonify({"error": str(e)}), 500
 
 
+def newOperation():
+    data = request.json
+
+    garbageAlertId = data.get("id")
+    userId = data.get("userId")
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
+
+    if garbageAlertId is None or userId is None:
+        return jsonify({"error": "Missing garbageAlertId or userId"}), 400
+
+    if not latitude or not longitude:
+        return "لا توجد بيانات مستلمة" + latitude, 400
+
+    latitude = float(latitude)
+    longitude = float(longitude)
+
+    lat_str, lon_str = convert_coordinates(latitude, longitude)
+    address = f"{lat_str}{lon_str}"
+
+    truckId = Truck.query.filter_by(userId=userId).first()
+
+    garbageAlert = GarbageAlert(
+        id=garbageAlertId,
+        status=True,
+    )
+
+    newOperation = Operation(
+        truckId=truckId.id,
+        alertId=garbageAlertId,
+        location=address,
+        date=datetime.utcnow(),
+    )
+
+    db.session.add(garbageAlert)
+    db.session.add(newOperation)
+    db.session.commit()
+
+    return jsonify({"error": "User not found"}), 404
+
+
 # # لاستقبال صورة القمامة api
 # @apiBp.route("/rubbish_pic", methods=["POST"])
 # def rubbishPic():
