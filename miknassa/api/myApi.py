@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_limiter import Limiter
+from sqlalchemy import null
 from miknassa.models import *
 from miknassa import bcrypt
 from miknassa.helper import renameImage, convert_coordinates
@@ -192,6 +193,7 @@ def allUsers():
                 "firstName": user.firstName,
                 "lastName": user.lastName,
                 "username": user.username,
+                "role": "عادي" if user.userTypeId == 1 else ("مدير" if user.userTypeId == 2 else "سائق"),
             }
             for user in users
         ]

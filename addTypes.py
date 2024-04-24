@@ -9,15 +9,15 @@ with app.app_context():
     # قائمة أنواع حسابات المستخدمين
     userTypesToAdd = [
         UserType(id=1, typeName="regular"),
-        UserType(id=2, typeName="admin"),
-        UserType(id=3, typeName="driver"),
+        UserType(id=2, typeName="driver"),
+        UserType(id=3, typeName="admin"),
         UserType(id=4, typeName="noOne"),
     ]
 
     # قائمة أصناف الشاحنات
     truckTypesToAdd = [
-        TruckType(id=1, typeName="truck"),
-        TruckType(id=2, typeName="compressor truck"),
+        TruckType(id=1, typeName="compressor truck"),
+        TruckType(id=2, typeName="truck"),
         TruckType(id=3, typeName="dump truck"),
     ]
 
