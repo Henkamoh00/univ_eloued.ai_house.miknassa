@@ -119,11 +119,10 @@ def garbageAlertPic():
 
 
 @apiBp.route("/get_garbage_alerts", methods=["GET"])
-def garbage_alert():
+def garbageAlerts():
     try:
-        # استعلام قاعدة البيانات لجلب البيانات المطلوبة من جدول الحالات
         garbageAlerts = GarbageAlert.query.all()
-        # تحويل البيانات إلى قائمة من الدوائر
+
         data = [
             {
                 "id": garbageAlert.id,
@@ -132,10 +131,8 @@ def garbage_alert():
             }
             for garbageAlert in garbageAlerts
         ]
-        # استجابة بتنسيق JSON
         return jsonify(data), 200
     except Exception as e:
-        # في حالة حدوث خطأ، يمكن إرسال استجابة خطأ
         return jsonify({"error": str(e)}), 500
 
 
@@ -143,10 +140,14 @@ def garbage_alert():
 def newOperation():
     data = request.json
 
-    garbageAlertId = data.get("id")
+    garbageAlertId = data.get("itemId")
     userId = data.get("userId")
     latitude = data.get("latitude")
     longitude = data.get("longitude")
+
+    oldOperation = Operation.query.filter_by(alertId=garbageAlertId).first()
+    if oldOperation != null:
+        return "", 200
 
     if garbageAlertId is None or userId is None:
         return jsonify({"error": "Missing garbageAlertId or userId"}), 400
@@ -178,6 +179,54 @@ def newOperation():
     db.session.commit()
 
     return "", 200
+
+
+@apiBp.route("/get_all_users", methods=["GET"])
+def allUsers():
+    try:
+        users = User.query.all()
+
+        data = [
+            {
+                "id": user.id,
+                "firstName": user.firstName,
+                "lastName": user.lastName,
+                "username": user.username,
+            }
+            for user in users
+        ]
+        return jsonify(data), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@apiBp.route("/role_changing", methods=["POST"])
+def roleChanging():
+    try:
+        data = request.json
+
+        userId = data.get("itemId")
+        adminId = data.get("userId")
+
+        if userId is None or adminId is None:
+            return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
+
+        userId = int(userId)
+        adminId = int(adminId)
+
+        user = User.query.filter_by(id=userId).first()
+
+        if user.userTypeId < 3:
+            user.userTypeId = user.userTypeId + 1
+        else:
+            user.userTypeId = 1
+
+        db.session.commit()
+
+        return "تم تغيير الدور", 200
+
+    except Exception as e:
+        return "فشل تغيير الدّور", 500
 
 
 # # لاستقبال صورة القمامة api
