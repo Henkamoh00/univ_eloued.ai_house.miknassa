@@ -1,62 +1,203 @@
-from flask_mail import Message
-from flask import render_template, current_app
-import secrets, os
-from PIL import Image
-# from geopy.geocoders import Nominatim
+from flask import Blueprint, request, jsonify
+from flask_limiter import Limiter
+from miknassa.models import *
+from miknassa import bcrypt
+from miknassa.helper import renameImage, convert_coordinates
+
+apiBp = Blueprint("api", __name__)
+limiter = Limiter(apiBp)
 
 
-def renameImage(imageFile, path="media"):
-    random_hex = secrets.token_hex(8)
-    _, ext = os.path.splitext(imageFile.filename)
-    imageName = random_hex + ext
-    imagePath = os.path.join(current_app.root_path, "static/" + path, imageName)
+# لاستقبال بيانات تسجيل الدخول api
+@apiBp.route("/users", methods=["POST"])
+@limiter.limit("5 per minute", key_func=lambda: request.remote_addr)
+def loginUser():
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
+    if email is None or password is None:
+        return jsonify({"error": "Missing email or password"}), 400
 
-    size = (200, 200)
-    image = Image.open(imageFile)
-    image.thumbnail(size)
-    image.save(imagePath)
-    return imageName
+    user = User.query.filter_by(email=email).first()
+    address = Municipality.query.filter_by(id=user.municipalityId).first()
+
+    if user and bcrypt.check_password_hash(user.password, password):
+        return (
+            jsonify(
+                {
+                    "id": user.id,
+                    "firstName": user.firstName,
+                    "lastName": user.lastName,
+                    "username": user.username,
+                    "gender": user.gender,
+                    "email": user.email,
+                    "phoneNumber": user.phoneNumber,
+                    "address": address.name,
+                    "houseNumber": user.houseNumber,
+                    "location": user.location,
+                    # "birthDate": user.birthDate,
+                    "birthPlace": user.birthPlace,
+                    "userTypeId": user.userTypeId,
+                    "imageFile": f"{request.host_url}media/{user.imageFile}",
+                    # "joinDate": user.joinDate,
+                }
+            ),
+            200,
+        )
+
+    return jsonify({"error": "User not found"}), 404
 
 
-def convert_to_degrees(value):
-    degrees = int(value)
-    minutes = int((value - degrees) * 60)
-    seconds = round((value - degrees - minutes / 60) * 3600, 1)
-    return degrees, minutes, seconds
+# لاستقبال التنبيه api
+@apiBp.route("/garbage_alert", methods=["POST"])
+def garbageAlert():
+
+    data = request.json
+    userId = data.get("userId")
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
+    if not latitude or not longitude or not userId:
+        return "لا توجد بيانات مستلمة" + latitude, 400
+
+    userId = int(userId)
+    latitude = float(latitude)
+    longitude = float(longitude)
+
+    lat_str, lon_str = convert_coordinates(latitude, longitude)
+    address = f"{lat_str}{lon_str}"
+
+    garbageAlert = GarbageAlert(
+        userId=userId,
+        location=address,
+        date=datetime.utcnow(),
+        # picture="",
+    )
+    db.session.add(garbageAlert)
+    db.session.commit()
+
+    return "", 200
 
 
-def convert_coordinates(latitude, longitude):
-    # Convert latitude to degrees, minutes, seconds
-    lat_deg, lat_min, lat_sec = convert_to_degrees(abs(latitude))
-    lat_dir = "N" if latitude >= 0 else "S"
+# api لاستقبال التنبيه مع صورة
+@apiBp.route("/garbage_alert_with_pic", methods=["POST"])
+def garbageAlertPic():
+    picPath = ""
 
-    # Convert longitude to degrees, minutes, seconds
-    lon_deg, lon_min, lon_sec = convert_to_degrees(abs(longitude))
-    lon_dir = "E" if longitude >= 0 else "W"
+    userId = request.form.get("userId")
+    latitude = request.form.get("latitude")
+    longitude = request.form.get("longitude")
+    if not latitude or not longitude or not userId:
+        return "لا توجد بيانات مستلمة", 400
 
-    # Format coordinates as required
-    lat_str = f"{lat_deg}°{lat_min}'{lat_sec}\"{lat_dir}"
-    lon_str = f"{lon_deg}°{lon_min}'{lon_sec}\"{lon_dir}"
+    userId = int(userId)
+    latitude = float(latitude)
+    longitude = float(longitude)
 
-    return lat_str, lon_str
+    lat_str, lon_str = convert_coordinates(latitude, longitude)
+    address = f"{lat_str}{lon_str}"
+
+    if "image" in request.files:
+        image_file = request.files["image"]
+        picPath = renameImage(image_file, "media/alert")
+    else:
+        return "لا توجد صورة مستلمة" + latitude, 400
+
+    garbageAlert = GarbageAlert(
+        userId=userId,
+        location=address,
+        date=datetime.utcnow(),
+        picture="alert/" + picPath,
+    )
+    db.session.add(garbageAlert)
+    db.session.commit()
+
+    if picPath != "":
+        return (
+            jsonify({"message": "Image uploaded successfully", "image_path": picPath}),
+            200,
+        )
 
 
-@current_app.errorhandler(404)
-def page_not_found(error):
-    return render_template("additions/404.html"), 404
+@apiBp.route("/get_garbage_alerts", methods=["GET"])
+def garbage_alert():
+    try:
+        # استعلام قاعدة البيانات لجلب البيانات المطلوبة من جدول الحالات
+        garbageAlerts = GarbageAlert.query.all()
+        # تحويل البيانات إلى قائمة من الدوائر
+        data = [
+            {
+                "id": garbageAlert.id,
+                "location": garbageAlert.location,
+                "status": garbageAlert.status,
+            }
+            for garbageAlert in garbageAlerts
+        ]
+        # استجابة بتنسيق JSON
+        return jsonify(data), 200
+    except Exception as e:
+        # في حالة حدوث خطأ، يمكن إرسال استجابة خطأ
+        return jsonify({"error": str(e)}), 500
 
 
-# def convert_coordinates_to_address(latitude, longitude):
-#     # Initialize Nominatim geocoder
-#     geolocator = Nominatim(user_agent="miknassaApp")
+@apiBp.route("/new_operation", methods=["POST"])
+def newOperation():
+    data = request.json
 
-#     # Combine latitude and longitude into a string
-#     location = f"{latitude}, {longitude}"
+    garbageAlertId = data.get("id")
+    userId = data.get("userId")
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
 
-#     # Use reverse geocoding to convert coordinates to address
-#     try:
-#         address = geolocator.reverse(location)
-#         return address.address
-#     except Exception as e:
-#         print(f"Error occurred: {e}")
-#         return None
+    oldOperation = Operation.query.filter_by(alertId=garbageAlertId).first()
+    if oldOperation != null:
+        return "", 200
+
+    if garbageAlertId is None or userId is None:
+        return jsonify({"error": "Missing garbageAlertId or userId"}), 400
+
+    if not latitude or not longitude:
+        return "لا توجد احداثيات مستلمة" + latitude, 400
+
+    garbageAlertId = int(garbageAlertId)
+    userId = int(userId)
+    latitude = float(latitude)
+    longitude = float(longitude)
+
+    lat_str, lon_str = convert_coordinates(latitude, longitude)
+    address = f"{lat_str}{lon_str}"
+
+    truck = Truck.query.filter_by(userId=userId).first()
+
+    garbageAlert = GarbageAlert.query.filter_by(id=garbageAlertId).first()
+    garbageAlert.status = True
+
+    newOperation = Operation(
+        truckId=truck.id,
+        alertId=garbageAlertId,
+        location=address,
+        date=datetime.utcnow(),
+    )
+
+    db.session.add(newOperation)
+    db.session.commit()
+
+    return "", 200
+
+
+# # لاستقبال صورة القمامة api
+# @apiBp.route("/rubbish_pic", methods=["POST"])
+# def rubbishPic():
+#     if "image" not in request.files:
+#         return jsonify({"error": "No image part in the request"}), 400
+
+#     image = request.files["image"]
+
+#     if image.filename == "":
+#         return jsonify({"error": "No selected image"}), 400
+
+#     if image:
+#         image = renameImage(image.filename, "media/alert")
+#         # user.imageFile = image
+#         return jsonify({"message": "Image uploaded successfully", "image_path": image.filename}), 200
+
+#     return jsonify({"error": "Unknown error occurred"}), 500
