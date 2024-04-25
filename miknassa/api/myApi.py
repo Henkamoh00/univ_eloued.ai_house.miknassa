@@ -1,6 +1,6 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from flask_limiter import Limiter
-from sqlalchemy import null
+from sqlalchemy import null, desc
 from miknassa.models import *
 from miknassa import bcrypt
 from miknassa.helper import renameImage, convert_coordinates
@@ -246,7 +246,7 @@ def addTruck():
         userId = data.get("userId")
         truckTypeId = data.get("matricule")
 
-        last_row = session.query(YourModel).order_by(desc(YourModel.id)).first()
+        last_row = session.query(Truck).order_by(desc(Truck.id)).first()
         id = last_row + 1
 
         qr_data = f"id: {id}, matricule: {data['matricule']}, userId: {data['userId']}, truckTypeId: {data['truckTypeId']}"
