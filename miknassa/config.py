@@ -1,16 +1,16 @@
 from dotenv import load_dotenv
 import os
 
-project_folder = os.path.expanduser('~/Desktop/memoire1/projectDeployment')
+project_folder = os.path.expanduser('~/miknassaProject/')
 load_dotenv(os.path.join(project_folder, '.env'))
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
-    
+
     SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
     # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root@localhost/miknassa' # يستخدم مكتبية مختلفة للاتصال بقاعدة البيانات
     SQLALCHEMY_POOL_RECYCLE = 299
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # لحماية الكوكيز
     SESSION_COOKIE_SAMESITE = 'None'
