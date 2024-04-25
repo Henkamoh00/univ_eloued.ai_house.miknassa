@@ -247,12 +247,12 @@ def addTruck():
         userId = data.get("userId")
         truckTypeId = data.get("truckTypeId")
 
-        last_row = Truck.query.order_by(desc(Truck.id)).first()
+        # last_row = Truck.query.order_by(desc(Truck.id)).first()
 
-        if last_row:
-            id = last_row.id + 1
-        else:
-            id = 1
+        # if last_row:
+        #     id = last_row.id + 1
+        # else:
+        #     id = 1
 
         qr_data = f"id: {id}, matricule: {data['matricule']}, userId: {data['userId']}, truckTypeId: {data['truckTypeId']}"
         random_hex = secrets.token_hex(8)
@@ -260,7 +260,7 @@ def addTruck():
         qr_code = qrcode.make(qr_data)
         qrCodePath = (
             os.path.join(current_app.root_path, "static/media/qrCodes/", random_hex)
-            + ".JPG"
+            + ".jpg"
         )
         qr_code.save(qrCodePath)
 
@@ -281,12 +281,12 @@ def addTruck():
         truckTypeId = int(truckTypeId)
 
         truck = Truck(
-            id=id,
+            # id=id,
             matricule=matricule,
             userId=userId,
             truckTypeId=truckTypeId,
             # qr_code=qr_code,
-            qr_codePath="qrCodes/" + random_hex + ".JPG",
+            qr_codePath="qrCodes/" + random_hex + ".jpg",
         )
 
         db.session.add(truck)
