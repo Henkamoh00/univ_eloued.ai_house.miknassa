@@ -2,6 +2,7 @@ from flask_mail import Message
 from flask import render_template, current_app
 import secrets, os
 from PIL import Image
+
 # from geopy.geocoders import Nominatim
 
 
