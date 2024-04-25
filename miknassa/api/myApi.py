@@ -1,11 +1,12 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify
 from flask_limiter import Limiter
 from sqlalchemy import null, desc
 from miknassa.models import *
 from miknassa import bcrypt
 from miknassa.helper import renameImage, convert_coordinates
-import qrcode
-from io import BytesIO
+import qrcode, secrets, os
+
+# from io import BytesIO
 
 apiBp = Blueprint("api", __name__)
 limiter = Limiter(apiBp)
@@ -244,17 +245,25 @@ def addTruck():
 
         matricule = data.get("matricule")
         userId = data.get("userId")
-        truckTypeId = data.get("matricule")
+        truckTypeId = data.get("truckTypeId")
 
-        last_row = session.query(Truck).order_by(desc(Truck.id)).first()
-        id = last_row + 1
+        last_row = Truck.query.order_by(desc(Truck.id)).first()
+
+        if last_row:
+            id = last_row.id + 1
+        else:
+            id = 1
 
         qr_data = f"id: {id}, matricule: {data['matricule']}, userId: {data['userId']}, truckTypeId: {data['truckTypeId']}"
+        random_hex = secrets.token_hex(8)
 
         qr_code = qrcode.make(qr_data)
+        qrCodePath = (
+            os.path.join(current_app.root_path, "static/media/qrCodes/", random_hex)
+            + "JPG"
+        )
+        qr_code.save(qrCodePath)
 
-        qr_image = qr_code.make_image(fill_color="black", back_color="white")
-        qr_codePath = renameImage(qr_image, "media/qrCodes/")
         # عند الحاجة الى ارسالها كتسلسل بايتات او تخزينها في قاعدة البيانات
         # qr_bytes = BytesIO()
         # qr_image.save(qr_bytes, format='PNG')
@@ -278,16 +287,17 @@ def addTruck():
             userId=userId,
             truckTypeId=truckTypeId,
             # qr_code=qr_code,
-            qr_codePath=qr_codePath,
+            qr_codePath=qrCodePath,
         )
 
         db.session.add(truck)
         db.session.commit()
 
-        return "تمّ إدراج شاحنة جديدة", 200
+        return qrCodePath, 200
+        # return "تمّ إدراج شاحنة جديدة", 200
 
     except Exception as e:
-        return "", 500
+        return f"حدث خطأ ما !!{e}", 500
 
 
 # # لاستقبال صورة القمامة api
