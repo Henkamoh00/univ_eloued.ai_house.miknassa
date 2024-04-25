@@ -247,12 +247,12 @@ def addTruck():
         userId = data.get("userId")
         truckTypeId = data.get("truckTypeId")
 
-        # last_row = Truck.query.order_by(desc(Truck.id)).first()
+        last_row = Truck.query.order_by(desc(Truck.id)).first()
 
-        # if last_row:
-        #     id = last_row.id + 1
-        # else:
-        #     id = 1
+        if last_row:
+            id = last_row.id + 1
+        else:
+            id = 1
 
         qr_data = f"id: {id}, matricule: {data['matricule']}, userId: {data['userId']}, truckTypeId: {data['truckTypeId']}"
         random_hex = secrets.token_hex(8)
