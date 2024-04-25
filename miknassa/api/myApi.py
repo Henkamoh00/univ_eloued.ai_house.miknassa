@@ -244,8 +244,8 @@ def addTruck():
         data = request.json
 
         matricule = data.get("matricule")
-        userId = data.get("userId")
-        truckTypeId = data.get("truckTypeId")
+        username = data.get("username")
+        typeName = data.get("typeName")
 
         last_row = Truck.query.order_by(desc(Truck.id)).first()
 
@@ -254,7 +254,7 @@ def addTruck():
         else:
             id = 1
 
-        qr_data = f"id: {id}, matricule: {data['matricule']}, userId: {data['userId']}, truckTypeId: {data['truckTypeId']}"
+        qr_data = f"id: {id}, matricule: {data['matricule']}, userId: {data['username']}, truckTypeId: {data['typeName']}"
         random_hex = secrets.token_hex(8)
 
         qr_code = qrcode.make(qr_data)
@@ -269,22 +269,17 @@ def addTruck():
         # qr_image.save(qr_bytes, format='PNG')
         # qr_bytes.seek(0)
 
-        if (
-            matricule is None
-            or userId is None
-            or truckTypeId is None
-            or qr_code is None
-        ):
+        if matricule is None or username is None or typeName is None or qr_code is None:
             return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
 
-        userId = int(userId)
-        truckTypeId = int(truckTypeId)
+        user = User.query.filter_by(username=username).first()
+        truckType = TruckType.query.filter_by(typeName=typeName).first()
 
         truck = Truck(
             # id=id,
             matricule=matricule,
-            userId=userId,
-            truckTypeId=truckTypeId,
+            userId=user.id,
+            truckTypeId=truckType.id,
             # qr_code=qr_code,
             qr_codePath="qrCodes/" + random_hex + ".jpg",
         )
@@ -296,6 +291,38 @@ def addTruck():
 
     except Exception as e:
         return f"حدث خطأ ما !!{e}", 500
+
+
+@apiBp.route("/get_combobox_data", methods=["GET"])
+def getComboboxData():
+    try:
+        users = User.query.all()
+        usersList = [
+            {
+                "id": user.id,
+                "firstName": user.firstName,
+                "role": (
+                    "عادي"
+                    if user.userTypeId == 1
+                    else ("سائق" if user.userTypeId == 2 else "مدير")
+                ),
+            }
+            for user in users
+            if user.userTypeId == 2
+        ]
+
+        truckTypes = TruckType.query.all()
+        truckTypesList = [
+            {
+                "id": truckType.id,
+                "typeName": truckType.typeName,
+            }
+            for truckType in truckTypes
+        ]
+
+        return jsonify({"truckTypesList": truckTypesList, "usersList": usersList}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # # لاستقبال صورة القمامة api
