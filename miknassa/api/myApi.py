@@ -17,7 +17,7 @@ def loginUser():
     email = data.get("email")
     password = data.get("password")
     if email is None or password is None:
-        return jsonify({"error": "Missing email or password"}), 400
+        return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
 
     user = User.query.filter_by(email=email).first()
     address = Municipality.query.filter_by(id=user.municipalityId).first()
@@ -151,7 +151,7 @@ def newOperation():
         return "", 200
 
     if garbageAlertId is None or userId is None:
-        return jsonify({"error": "Missing garbageAlertId or userId"}), 400
+        return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
 
     if not latitude or not longitude:
         return "لا توجد احداثيات مستلمة" + latitude, 400
@@ -193,7 +193,11 @@ def allUsers():
                 "firstName": user.firstName,
                 "lastName": user.lastName,
                 "username": user.username,
-                "role": "عادي" if user.userTypeId == 1 else ("مدير" if user.userTypeId == 2 else "سائق"),
+                "role": (
+                    "عادي"
+                    if user.userTypeId == 1
+                    else ("سائق" if user.userTypeId == 2 else "مدير")
+                ),
             }
             for user in users
         ]
@@ -229,6 +233,43 @@ def roleChanging():
 
     except Exception as e:
         return "فشل تغيير الدّور", 500
+
+
+@apiBp.route("/add_truck", methods=["POST"])
+def addTruck():
+    try:
+        data = request.json
+
+        matricule = data.get("matricule")
+        userId = data.get("userId")
+        truckTypeId = data.get("matricule")
+        qr_code = data.get("qr_code")
+
+        if (
+            matricule is None
+            or userId is None
+            or truckTypeId is None
+            or qr_code is None
+        ):
+            return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
+
+        matricule = int(matricule)
+        userId = int(userId)
+        truckTypeId = int(truckTypeId)
+
+        newOperation = Operation(
+            matricule=matricule,
+            userId=userId,
+            truckTypeId=truckTypeId,
+            qr_code=qr_code,
+        )
+
+        db.session.commit()
+
+        return "تمّ إدراج شاحنة جديدة", 200
+
+    except Exception as e:
+        return "", 500
 
 
 # # لاستقبال صورة القمامة api

@@ -137,6 +137,7 @@ class Truck(db.Model):
     matricule = db.Column(db.Integer, unique=True, nullable=False)
     userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     truckTypeId = db.Column(db.Integer, db.ForeignKey("truckTypes.id"), nullable=False)
+    qr_code = db.Column(db.BLOB)
 
     r_trucksReport = db.relationship(
         "TrucksReport", backref="reportOn", lazy=True, cascade="all, delete-orphan"
@@ -185,7 +186,7 @@ class GarbageAlert(db.Model):
     location = db.Column(db.String(120), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     picture = db.Column(db.String(50), nullable=True)
-    status = db.Column(db.Boolean, nullable=False, server_default="false")
+    status = db.Column(db.Boolean, nullable=False, server_default="0")
 
     r_operation = db.relationship(
         "Operation", backref="taskAlert", lazy=True, cascade="all, delete-orphan"
