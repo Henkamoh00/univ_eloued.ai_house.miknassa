@@ -277,7 +277,6 @@ def addTruck():
         ):
             return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
 
-        matricule = int(matricule)
         userId = int(userId)
         truckTypeId = int(truckTypeId)
 
@@ -293,8 +292,7 @@ def addTruck():
         db.session.add(truck)
         db.session.commit()
 
-        return qrCodePath, 200
-        # return "تمّ إدراج شاحنة جديدة", 200
+        return "تمّ إدراج شاحنة جديدة", 200
 
     except Exception as e:
         return f"حدث خطأ ما !!{e}", 500

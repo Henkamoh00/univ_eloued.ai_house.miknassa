@@ -134,7 +134,7 @@ class Truck(db.Model):
     __tablename__ = "trucks"
 
     id = db.Column(db.Integer, primary_key=True)
-    matricule = db.Column(db.Integer, unique=True, nullable=False)
+    matricule = db.Column(db.String(15), unique=True, nullable=False)
     userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     truckTypeId = db.Column(db.Integer, db.ForeignKey("truckTypes.id"), nullable=False)
     qr_code = db.Column(db.LargeBinary) # PostegrSQL
