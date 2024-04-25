@@ -139,7 +139,7 @@ class Truck(db.Model):
     truckTypeId = db.Column(db.Integer, db.ForeignKey("truckTypes.id"), nullable=False)
     qr_code = db.Column(db.LargeBinary) # PostegrSQL
     # qr_code = db.Column(db.VARBINARY(100)) # MySQL
-    qr_codePath = db.Column(db.String(50), nullable=True)
+    qr_codePath = db.Column(db.String(100), nullable=True)
 
     r_trucksReport = db.relationship(
         "TrucksReport", backref="reportOn", lazy=True, cascade="all, delete-orphan"

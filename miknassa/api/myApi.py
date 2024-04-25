@@ -260,7 +260,7 @@ def addTruck():
         qr_code = qrcode.make(qr_data)
         qrCodePath = (
             os.path.join(current_app.root_path, "static/media/qrCodes/", random_hex)
-            + "JPG"
+            + ".JPG"
         )
         qr_code.save(qrCodePath)
 
@@ -286,7 +286,7 @@ def addTruck():
             userId=userId,
             truckTypeId=truckTypeId,
             # qr_code=qr_code,
-            qr_codePath=qrCodePath,
+            qr_codePath="qrCodes/" + random_hex + ".JPG",
         )
 
         db.session.add(truck)
