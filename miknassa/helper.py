@@ -2,10 +2,11 @@ from flask_mail import Message
 from flask import render_template, current_app
 import secrets, os
 from PIL import Image
+
 # from geopy.geocoders import Nominatim
 
 
-def renameImage(imageFile, path="media"):
+def renameImage(imageFile, path="media/"):
     random_hex = secrets.token_hex(8)
     _, ext = os.path.splitext(imageFile.filename)
     imageName = random_hex + ext

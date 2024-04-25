@@ -137,9 +137,8 @@ class Truck(db.Model):
     matricule = db.Column(db.Integer, unique=True, nullable=False)
     userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     truckTypeId = db.Column(db.Integer, db.ForeignKey("truckTypes.id"), nullable=False)
-    qr_code = db.Column(db.LargeBinary) # PostegrSQL
-    # qr_code = db.Column(db.VARBINARY(100)) # MySQL
-
+    qr_code = db.Column(db.VARBINARY(100), nullable=True)
+    qr_codePath = db.Column(db.String(50), nullable=True)
 
     r_trucksReport = db.relationship(
         "TrucksReport", backref="reportOn", lazy=True, cascade="all, delete-orphan"

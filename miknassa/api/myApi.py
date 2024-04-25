@@ -4,6 +4,8 @@ from sqlalchemy import null
 from miknassa.models import *
 from miknassa import bcrypt
 from miknassa.helper import renameImage, convert_coordinates
+import qrcode
+from io import BytesIO
 
 apiBp = Blueprint("api", __name__)
 limiter = Limiter(apiBp)
@@ -99,7 +101,7 @@ def garbageAlertPic():
 
     if "image" in request.files:
         image_file = request.files["image"]
-        picPath = renameImage(image_file, "media/alert")
+        picPath = renameImage(image_file, "media/alert/")
     else:
         return "لا توجد صورة مستلمة" + latitude, 400
 
@@ -243,7 +245,20 @@ def addTruck():
         matricule = data.get("matricule")
         userId = data.get("userId")
         truckTypeId = data.get("matricule")
-        qr_code = data.get("qr_code")
+
+        last_row = session.query(YourModel).order_by(desc(YourModel.id)).first()
+        id = last_row + 1
+
+        qr_data = f"id: {id}, matricule: {data['matricule']}, userId: {data['userId']}, truckTypeId: {data['truckTypeId']}"
+
+        qr_code = qrcode.make(qr_data)
+
+        qr_image = qr_code.make_image(fill_color="black", back_color="white")
+        qr_codePath = renameImage(qr_image, "media/qrCodes/")
+        # عند الحاجة الى ارسالها كتسلسل بايتات او تخزينها في قاعدة البيانات
+        # qr_bytes = BytesIO()
+        # qr_image.save(qr_bytes, format='PNG')
+        # qr_bytes.seek(0)
 
         if (
             matricule is None
@@ -257,13 +272,16 @@ def addTruck():
         userId = int(userId)
         truckTypeId = int(truckTypeId)
 
-        newOperation = Operation(
+        truck = Truck(
+            id=id,
             matricule=matricule,
             userId=userId,
             truckTypeId=truckTypeId,
-            qr_code=qr_code,
+            # qr_code=qr_code,
+            qr_codePath=qr_codePath,
         )
 
+        db.session.add(truck)
         db.session.commit()
 
         return "تمّ إدراج شاحنة جديدة", 200
@@ -284,7 +302,7 @@ def addTruck():
 #         return jsonify({"error": "No selected image"}), 400
 
 #     if image:
-#         image = renameImage(image.filename, "media/alert")
+#         image = renameImage(image.filename, "media/alert/")
 #         # user.imageFile = image
 #         return jsonify({"message": "Image uploaded successfully", "image_path": image.filename}), 200
 
