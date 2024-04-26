@@ -16,110 +16,150 @@ limiter = Limiter(apiBp)
 @apiBp.route("/users", methods=["POST"])
 @limiter.limit("5 per minute", key_func=lambda: request.remote_addr)
 def loginUser():
-    data = request.json
-    email = data.get("email")
-    password = data.get("password")
-    if email is None or password is None:
-        return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
+    try:
+        data = request.json
 
-    user = User.query.filter_by(email=email).first()
-    address = Municipality.query.filter_by(id=user.municipalityId).first()
+        email = data.get("email")
+        password = data.get("password")
 
-    if user and bcrypt.check_password_hash(user.password, password):
-        return (
-            jsonify(
-                {
-                    "id": user.id,
-                    "firstName": user.firstName,
-                    "lastName": user.lastName,
-                    "username": user.username,
-                    "gender": user.gender,
-                    "email": user.email,
-                    "phoneNumber": user.phoneNumber,
-                    "address": address.name,
-                    "houseNumber": user.houseNumber,
-                    "location": user.location,
-                    # "birthDate": user.birthDate,
-                    "birthPlace": user.birthPlace,
-                    "userTypeId": user.userTypeId,
-                    "imageFile": f"{request.host_url}media/{user.imageFile}",
-                    # "joinDate": user.joinDate,
-                }
-            ),
-            200,
-        )
+        if email is None or email == "" or password is None or password == "":
+            return "يوجد خطأ في البيانات المدخلة", 400
 
-    return jsonify({"error": "User not found"}), 404
+        user = User.query.filter_by(email=email).first()
+        address = Municipality.query.filter_by(id=user.municipalityId).first()
+
+        if user and bcrypt.check_password_hash(user.password, password):
+            return (
+                jsonify(
+                    {
+                        "id": user.id,
+                        "firstName": user.firstName,
+                        "lastName": user.lastName,
+                        "username": user.username,
+                        "gender": user.gender,
+                        "email": user.email,
+                        "phoneNumber": user.phoneNumber,
+                        "address": address.name,
+                        # "houseNumber": user.houseNumber,
+                        # "location": user.location,
+                        # "birthDate": user.birthDate,
+                        # "birthPlace": user.birthPlace,
+                        "userTypeId": user.userTypeId,
+                        "imageFile": f"{request.host_url}media/{user.imageFile}",
+                        # "joinDate": user.joinDate,
+                    }
+                ),
+                200,
+            )
+
+        return "خطأ في البريد الالكتروني أو كلمة المرور", 401
+
+    except Exception as e:
+        db.session.rollback()
+        # raise
+        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+
+    finally:
+        db.session.close()
 
 
 # لاستقبال التنبيه api
 @apiBp.route("/garbage_alert", methods=["POST"])
 def garbageAlert():
+    try:
+        data = request.json
 
-    data = request.json
-    userId = data.get("userId")
-    latitude = data.get("latitude")
-    longitude = data.get("longitude")
-    if not latitude or not longitude or not userId:
-        return "لا توجد بيانات مستلمة" + latitude, 400
+        userId = data.get("userId")
+        latitude = data.get("latitude")
+        longitude = data.get("longitude")
 
-    userId = int(userId)
-    latitude = float(latitude)
-    longitude = float(longitude)
+        if (
+            userId is None
+            or userId == ""
+            or latitude is None
+            or latitude == ""
+            or longitude is None
+            or longitude == ""
+        ):
+            return "توجد مشكلة في تسجيل المعلومات", 400
 
-    lat_str, lon_str = convert_coordinates(latitude, longitude)
-    address = f"{lat_str}{lon_str}"
+        userId = int(userId)
+        latitude = float(latitude)
+        longitude = float(longitude)
 
-    garbageAlert = GarbageAlert(
-        userId=userId,
-        location=address,
-        date=datetime.utcnow(),
-        # picture="",
-    )
-    db.session.add(garbageAlert)
-    db.session.commit()
+        lat_str, lon_str = convert_coordinates(latitude, longitude)
+        address = f"{lat_str}{lon_str}"
 
-    return "", 200
+        garbageAlert = GarbageAlert(
+            userId=userId,
+            location=address,
+            date=datetime.utcnow(),
+        )
+        db.session.add(garbageAlert)
+        db.session.commit()
+
+        return "تمّ إرسال التّنبيه", 200
+
+    except Exception as e:
+        db.session.rollback()
+        # raise
+        return "فشل إرسال التّنبيه", 500
+
+    finally:
+        db.session.close()
 
 
 # api لاستقبال التنبيه مع صورة
 @apiBp.route("/garbage_alert_with_pic", methods=["POST"])
 def garbageAlertPic():
-    picPath = ""
+    try:
+        picPath = ""
 
-    userId = request.form.get("userId")
-    latitude = request.form.get("latitude")
-    longitude = request.form.get("longitude")
-    if not latitude or not longitude or not userId:
-        return "لا توجد بيانات مستلمة", 400
+        userId = request.form.get("userId")
+        latitude = request.form.get("latitude")
+        longitude = request.form.get("longitude")
 
-    userId = int(userId)
-    latitude = float(latitude)
-    longitude = float(longitude)
+        if (
+            userId is None
+            or userId == ""
+            or latitude is None
+            or latitude == ""
+            or longitude is None
+            or longitude == ""
+        ):
+            return "توجد مشكلة في تسجيل المعلومات", 400
 
-    lat_str, lon_str = convert_coordinates(latitude, longitude)
-    address = f"{lat_str}{lon_str}"
+        userId = int(userId)
+        latitude = float(latitude)
+        longitude = float(longitude)
 
-    if "image" in request.files:
-        image_file = request.files["image"]
-        picPath = renameImage(image_file, "media/alert/")
-    else:
-        return "لا توجد صورة مستلمة" + latitude, 400
+        lat_str, lon_str = convert_coordinates(latitude, longitude)
+        address = f"{lat_str}{lon_str}"
 
-    garbageAlert = GarbageAlert(
-        userId=userId,
-        location=address,
-        date=datetime.utcnow(),
-        picture="alert/" + picPath,
-    )
-    db.session.add(garbageAlert)
-    db.session.commit()
+        if "image" in request.files:
+            image_file = request.files["image"]
+            picPath = renameImage(image_file, "media/alert/")
+        else:
+            return "لا توجد صورة مستلمة", 400
 
-    if picPath != "":
-        return (
-            jsonify({"message": "Image uploaded successfully", "image_path": picPath}),
-            200,
+        garbageAlert = GarbageAlert(
+            userId=userId,
+            location=address,
+            date=datetime.utcnow(),
+            picture="alert/" + picPath,
         )
+        db.session.add(garbageAlert)
+        db.session.commit()
+
+        return "تمّ ارسال التنبيه", 200
+
+    except Exception as e:
+        db.session.rollback()
+        # raise
+        return "فشل إرسال التّنبيه", 500
+
+    finally:
+        db.session.close()
 
 
 @apiBp.route("/get_garbage_alerts", methods=["GET"])
@@ -136,53 +176,73 @@ def garbageAlerts():
             for garbageAlert in garbageAlerts
         ]
         return jsonify(data), 200
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        db.session.rollback()
+        # raise
+        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+
+    finally:
+        db.session.close()
 
 
 @apiBp.route("/new_operation", methods=["POST"])
 def newOperation():
-    data = request.json
+    try:
+        data = request.json
 
-    garbageAlertId = data.get("itemId")
-    userId = data.get("userId")
-    latitude = data.get("latitude")
-    longitude = data.get("longitude")
+        garbageAlertId = data.get("itemId")
+        userId = data.get("userId")
+        latitude = data.get("latitude")
+        longitude = data.get("longitude")
 
-    oldOperation = Operation.query.filter_by(alertId=garbageAlertId).first()
-    if oldOperation != null:
-        return "", 200
+        if (
+            garbageAlertId is None
+            or garbageAlertId == ""
+            or userId is None
+            or userId == ""
+        ):
+            return "تأكّد من المدخلات", 400
 
-    if garbageAlertId is None or userId is None:
-        return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
+        if latitude is None or latitude == "" or longitude is None or longitude == "":
+            return "فشل في تحديد موقعك", 400
 
-    if not latitude or not longitude:
-        return "لا توجد احداثيات مستلمة" + latitude, 400
+        oldOperation = Operation.query.filter_by(alertId=garbageAlertId).first()
+        if oldOperation:
+            return "", 200
 
-    garbageAlertId = int(garbageAlertId)
-    userId = int(userId)
-    latitude = float(latitude)
-    longitude = float(longitude)
+        garbageAlertId = int(garbageAlertId)
+        userId = int(userId)
+        latitude = float(latitude)
+        longitude = float(longitude)
 
-    lat_str, lon_str = convert_coordinates(latitude, longitude)
-    address = f"{lat_str}{lon_str}"
+        lat_str, lon_str = convert_coordinates(latitude, longitude)
+        address = f"{lat_str}{lon_str}"
 
-    truck = Truck.query.filter_by(userId=userId).first()
+        truck = Truck.query.filter_by(userId=userId).first()
 
-    garbageAlert = GarbageAlert.query.filter_by(id=garbageAlertId).first()
-    garbageAlert.status = True
+        newOperation = Operation(
+            truckId=truck.id,
+            alertId=garbageAlertId,
+            location=address,
+            date=datetime.utcnow(),
+        )
 
-    newOperation = Operation(
-        truckId=truck.id,
-        alertId=garbageAlertId,
-        location=address,
-        date=datetime.utcnow(),
-    )
+        garbageAlert = GarbageAlert.query.filter_by(id=garbageAlertId).first()
+        garbageAlert.status = True
 
-    db.session.add(newOperation)
-    db.session.commit()
+        db.session.add(newOperation)
+        db.session.commit()
 
-    return "", 200
+        return "تمّ تأكيد إتمام المهمّة", 200
+
+    except Exception as e:
+        db.session.rollback()
+        # raise
+        return "فشل تأكيد إتمام لمهمّة\nحاول مجدّدا في وقت لاحق", 500
+
+    finally:
+        db.session.close()
 
 
 @apiBp.route("/get_all_users", methods=["GET"])
@@ -205,8 +265,14 @@ def allUsers():
             for user in users
         ]
         return jsonify(data), 200
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        db.session.rollback()
+        # raise
+        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+
+    finally:
+        db.session.close()
 
 
 @apiBp.route("/role_changing", methods=["POST"])
@@ -217,8 +283,8 @@ def roleChanging():
         userId = data.get("itemId")
         adminId = data.get("userId")
 
-        if userId is None or adminId is None:
-            return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
+        if userId is None or userId == "" or adminId is None or adminId == "":
+            return "تأكّد من المدخلات", 400
 
         userId = int(userId)
         adminId = int(adminId)
@@ -232,10 +298,15 @@ def roleChanging():
 
         db.session.commit()
 
-        return "تم تغيير الدور", 200
+        return "تم تغيير الدّور", 200
 
     except Exception as e:
+        db.session.rollback()
+        # raise
         return "فشل تغيير الدّور", 500
+
+    finally:
+        db.session.close()
 
 
 @apiBp.route("/add_truck", methods=["POST"])
@@ -246,6 +317,13 @@ def addTruck():
         matricule = data.get("matricule")
         username = data.get("username")
         typeName = data.get("typeName")
+
+        if matricule is None or matricule == "" or username is None or typeName is None:
+            return "تأكّد من المدخلات", 400
+
+        truck = Truck.query.filter_by(matricule=matricule).first()
+        if truck:
+            return "لوحة الترقيم هذه مدرجة من قبل", 400
 
         last_row = Truck.query.order_by(desc(Truck.id)).first()
 
@@ -269,18 +347,16 @@ def addTruck():
         # qr_image.save(qr_bytes, format='PNG')
         # qr_bytes.seek(0)
 
-        if matricule is None or username is None or typeName is None or qr_code is None:
-            return jsonify({"خطأ": "لا توجد بيانات مستلمة"}), 400
+        if qr_code is None:
+            return "يوجد مشكلة في إنشاء QR Code", 400
 
         user = User.query.filter_by(username=username).first()
         truckType = TruckType.query.filter_by(typeName=typeName).first()
 
         truck = Truck(
-            # id=id,
             matricule=matricule,
             userId=user.id,
             truckTypeId=truckType.id,
-            # qr_code=qr_code,
             qr_codePath="qrCodes/" + random_hex + ".jpg",
         )
 
@@ -290,55 +366,75 @@ def addTruck():
         return "تمّ إدراج شاحنة جديدة", 200
 
     except Exception as e:
-        return f"حدث خطأ ما !!{e}", 500
+        db.session.rollback()
+        # raise
+        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+
+    finally:
+        db.session.close()
 
 
 @apiBp.route("/get_combobox_data", methods=["GET"])
 def getComboboxData():
     try:
         users = User.query.all()
-        usersList = [
-            {
-                "id": user.id,
-                "firstName": user.firstName,
-                "role": (
-                    "عادي"
-                    if user.userTypeId == 1
-                    else ("سائق" if user.userTypeId == 2 else "مدير")
-                ),
-            }
-            for user in users
-            if user.userTypeId == 2
-        ]
+        usersList = [user.username for user in users if user.userTypeId == 2]
 
         truckTypes = TruckType.query.all()
-        truckTypesList = [
-            {
-                "id": truckType.id,
-                "typeName": truckType.typeName,
-            }
-            for truckType in truckTypes
-        ]
+        truckTypesList = [truckType.typeName for truckType in truckTypes]
 
         return jsonify({"truckTypesList": truckTypesList, "usersList": usersList}), 200
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        db.session.rollback()
+        # raise
+        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+
+    finally:
+        db.session.close()
 
 
-# # لاستقبال صورة القمامة api
-# @apiBp.route("/rubbish_pic", methods=["POST"])
-# def rubbishPic():
-#     if "image" not in request.files:
-#         return jsonify({"error": "No image part in the request"}), 400
+@apiBp.route("/get_combobox_municipalities", methods=["GET"])
+def getComboboxMunicipalities():
+    try:
+        municipalities = Municipality.query.all()
 
-#     image = request.files["image"]
+        data = [
+            {
+                "id": municipality.id,
+                "name": municipality.name,
+            }
+            for municipality in municipalities
+        ]
+        return jsonify(data), 200
 
-#     if image.filename == "":
-#         return jsonify({"error": "No selected image"}), 400
+    except Exception as e:
+        db.session.rollback()
+        # raise
+        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
 
-#     if image:
-#         image = renameImage(image.filename, "media/alert/")
-#         # user.imageFile = image
-#         return jsonify({"message": "Image uploaded successfully", "image_path": image.filename}), 200
+    finally:
+        db.session.close()
 
-#     return jsonify({"error": "Unknown error occurred"}), 500
+
+@apiBp.route("/truck_locations", methods=["POST"])
+def truckLocations():
+    try:
+        data = request.json
+
+        id = data.get("id")
+
+        if id is None or id == "":
+            return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+
+        id = int(id)
+
+        return "تمّ تحديد مواقع الشاحنات", 200
+
+    except Exception as e:
+        db.session.rollback()
+        # raise
+        return "فشل في تحديد مواقع الشاحنات", 500
+
+    finally:
+        db.session.close()
