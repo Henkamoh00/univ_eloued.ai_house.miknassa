@@ -57,7 +57,7 @@ def loginUser():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
 
     finally:
         db.session.close()
@@ -162,6 +162,7 @@ def garbageAlertPic():
         db.session.close()
 
 
+# لجلب جميع التنبيهات
 @apiBp.route("/get_garbage_alerts", methods=["GET"])
 def garbageAlerts():
     try:
@@ -186,6 +187,7 @@ def garbageAlerts():
         db.session.close()
 
 
+# لاستقبال عمليات اتمام المهام
 @apiBp.route("/new_operation", methods=["POST"])
 def newOperation():
     try:
@@ -246,8 +248,9 @@ def newOperation():
         db.session.close()
 
 
+# لجلب جميع المستخدمين
 @apiBp.route("/get_all_users", methods=["GET"])
-def allUsers():
+def getAllUsers():
     try:
         users = User.query.all()
 
@@ -276,6 +279,7 @@ def allUsers():
         db.session.close()
 
 
+# لتغيير أدوار المستخدمين
 @apiBp.route("/role_changing", methods=["POST"])
 def roleChanging():
     try:
@@ -310,6 +314,7 @@ def roleChanging():
         db.session.close()
 
 
+# لإدراج شاحنة
 @apiBp.route("/add_truck", methods=["POST"])
 def addTruck():
     try:
@@ -375,6 +380,7 @@ def addTruck():
         db.session.close()
 
 
+# لجلب معلومات المستخدمين و انواع الشاحنات لملء كومبوبوكس
 @apiBp.route("/get_combobox_data", methods=["GET"])
 def getComboboxData():
     try:
@@ -395,6 +401,7 @@ def getComboboxData():
         db.session.close()
 
 
+# لجلب اسماء الولايات لملء كومبوبوكس
 @apiBp.route("/get_combobox_municipalities", methods=["GET"])
 def getComboboxMunicipalities():
     try:
@@ -418,6 +425,7 @@ def getComboboxMunicipalities():
         db.session.close()
 
 
+# لتحديد مواقع الشاحنات على الخريطة
 @apiBp.route("/truck_locations", methods=["POST"])
 def truckLocations():
     try:
