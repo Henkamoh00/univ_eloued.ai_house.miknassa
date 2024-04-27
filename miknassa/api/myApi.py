@@ -26,31 +26,28 @@ def loginUser():
             return "يوجد خطأ في البيانات المدخلة", 400
 
         user = User.query.filter_by(email=email).first()
-        address = Municipality.query.filter_by(id=user.municipalityId).first()
 
         if user and bcrypt.check_password_hash(user.password, password):
-            return (
-                jsonify(
-                    {
-                        "id": user.id,
-                        "firstName": user.firstName,
-                        "lastName": user.lastName,
-                        "username": user.username,
-                        "gender": user.gender,
-                        "email": user.email,
-                        "phoneNumber": user.phoneNumber,
-                        "address": address.name,
-                        # "houseNumber": user.houseNumber,
-                        # "location": user.location,
-                        # "birthDate": user.birthDate,
-                        # "birthPlace": user.birthPlace,
-                        "userTypeId": user.userTypeId,
-                        "imageFile": f"{request.host_url}media/{user.imageFile}",
-                        # "joinDate": user.joinDate,
-                    }
-                ),
-                200,
-            )
+            address = Municipality.query.filter_by(id=user.municipalityId).first()
+
+            userData = {
+                "id": user.id,
+                "firstName": user.firstName,
+                "lastName": user.lastName,
+                "username": user.username,
+                "gender": user.gender,
+                "email": user.email,
+                "phoneNumber": user.phoneNumber,
+                "address": address.name,
+                # "houseNumber": user.houseNumber,
+                # "location": user.location,
+                # "birthDate": user.birthDate,
+                # "birthPlace": user.birthPlace,
+                "userTypeId": user.userTypeId,
+                "imageFile": f"{request.host_url}media/{user.imageFile}",
+                # "joinDate": user.joinDate,
+            }
+            return jsonify({"message": "تم تسجيل الدخول بنجاح", "userData": userData}), 200
 
         return "خطأ في البريد الالكتروني أو كلمة المرور", 401
 
