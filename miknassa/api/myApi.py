@@ -47,7 +47,10 @@ def loginUser():
                 "imageFile": f"{request.host_url}media/{user.imageFile}",
                 # "joinDate": user.joinDate,
             }
-            return jsonify({"message": "تم تسجيل الدخول بنجاح", "userData": userData}), 200
+            return (
+                jsonify({"message": "تم تسجيل الدخول بنجاح", "userData": userData}),
+                200,
+            )
 
         return "خطأ في البريد الالكتروني أو كلمة المرور", 401
 
@@ -174,7 +177,6 @@ def garbageAlerts():
             for garbageAlert in garbageAlerts
         ]
         return jsonify({"message": "تمّ جلب البيانات", "alerts": data}), 200
-
 
     except Exception as e:
         db.session.rollback()
@@ -388,7 +390,16 @@ def getComboboxData():
         truckTypes = TruckType.query.all()
         truckTypesList = [truckType.typeName for truckType in truckTypes]
 
-        return jsonify({"message": "تمّ تحميل البيانات", "truckTypesList": truckTypesList, "usersList": usersList}), 200
+        return (
+            jsonify(
+                {
+                    "message": "تمّ تحميل البيانات",
+                    "truckTypesList": truckTypesList,
+                    "usersList": usersList,
+                }
+            ),
+            200,
+        )
 
     except Exception as e:
         db.session.rollback()
@@ -413,7 +424,6 @@ def getComboboxMunicipalities():
             for municipality in municipalities
         ]
         return jsonify({"message": "تمّ تحميل البيانات", "municipalities": data}), 200
-
 
     except Exception as e:
         db.session.rollback()
@@ -449,4 +459,3 @@ def truckLocations():
 
     finally:
         db.session.close()
-
