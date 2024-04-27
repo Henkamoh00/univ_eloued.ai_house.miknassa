@@ -266,7 +266,7 @@ def getAllUsers():
             }
             for user in users
         ]
-        return jsonify(data), 200
+        return jsonify({"message": "تمّ جلب البيانات", "users": data}), 200
 
     except Exception as e:
         db.session.rollback()
