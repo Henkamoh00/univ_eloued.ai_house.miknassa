@@ -173,7 +173,8 @@ def garbageAlerts():
             }
             for garbageAlert in garbageAlerts
         ]
-        return jsonify(data), 200
+        return jsonify({"message": "تمّ جلب البيانات", "alerts": data}), 200
+
 
     except Exception as e:
         db.session.rollback()
