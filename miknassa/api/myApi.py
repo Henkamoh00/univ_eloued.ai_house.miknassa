@@ -179,7 +179,7 @@ def garbageAlerts():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
 
     finally:
         db.session.close()
@@ -240,7 +240,7 @@ def newOperation():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "فشل تأكيد إتمام لمهمّة\nحاول مجدّدا في وقت لاحق", 500
+        return "فشل تأكيد إتمام المهمّة\nحاول مجدّدا في وقت لاحق", 500
 
     finally:
         db.session.close()
@@ -271,7 +271,7 @@ def getAllUsers():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
 
     finally:
         db.session.close()
@@ -372,7 +372,7 @@ def addTruck():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
 
     finally:
         db.session.close()
@@ -393,7 +393,7 @@ def getComboboxData():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
 
     finally:
         db.session.close()
@@ -418,7 +418,7 @@ def getComboboxMunicipalities():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
 
     finally:
         db.session.close()
