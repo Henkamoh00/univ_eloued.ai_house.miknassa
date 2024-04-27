@@ -44,6 +44,9 @@ class User(db.Model, UserMixin):
     r_garbageAlert = db.relationship(
         "GarbageAlert", backref="alerter", lazy=True, cascade="all, delete-orphan"
     )
+    r_operation = db.relationship(
+        "Operation", backref="driver", lazy=True, cascade="all, delete-orphan"
+    )
 
     def getResetToken(self):
         s = Serializer(current_app.config["SECRET_KEY"], salt="pw-reset")
@@ -202,6 +205,7 @@ class Operation(db.Model):
     __tablename__ = "operations"
 
     id = db.Column(db.Integer, primary_key=True)
+    userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     truckId = db.Column(db.Integer, db.ForeignKey("trucks.id"), nullable=False)
     alertId = db.Column(db.Integer, db.ForeignKey("garbageAlerts.id"), nullable=False)
     location = db.Column(db.String(120), nullable=False)

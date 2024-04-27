@@ -422,19 +422,23 @@ def truckLocations():
     try:
         data = request.json
 
-        id = data.get("id")
+        name = data.get("municipality")
 
-        if id is None or id == "":
-            return "يوجد خلل تقني\nحاول مجدّدا في وقت لاحق", 500
+        if name is None or name == "":
+            return "توجد مشكلة في تحديد العنوان المطلوب", 400
 
-        id = int(id)
+        municipality = Municipality.query.filter_by(name=name).first()
 
-        return "تمّ تحديد مواقع الشاحنات", 200
+        if name == "المقرن":
+            return "تمّ تحديد مواقع الشاحنات", 200
+        else:
+            return f"فشل في تحديد مواقع الشاحنات", 500
 
     except Exception as e:
         db.session.rollback()
         # raise
-        return "فشل في تحديد مواقع الشاحنات", 500
+        return f"فشل في تحديد مواقع الشاحنات{e}", 500
 
     finally:
         db.session.close()
+
