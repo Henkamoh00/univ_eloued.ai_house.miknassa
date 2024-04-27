@@ -222,6 +222,7 @@ def newOperation():
         truck = Truck.query.filter_by(userId=userId).first()
 
         newOperation = Operation(
+            userId=userId,
             truckId=truck.id,
             alertId=garbageAlertId,
             location=address,
