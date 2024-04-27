@@ -191,7 +191,7 @@ class GarbageAlert(db.Model):
     location = db.Column(db.String(120), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     picture = db.Column(db.String(50), nullable=True)
-    status = db.Column(db.Boolean, nullable=False, server_default="0")
+    status = db.Column(db.Boolean, nullable=False, server_default="false")
 
     r_operation = db.relationship(
         "Operation", backref="taskAlert", lazy=True, cascade="all, delete-orphan"
