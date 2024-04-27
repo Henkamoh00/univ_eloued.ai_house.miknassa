@@ -388,7 +388,7 @@ def getComboboxData():
         truckTypes = TruckType.query.all()
         truckTypesList = [truckType.typeName for truckType in truckTypes]
 
-        return jsonify({"truckTypesList": truckTypesList, "usersList": usersList}), 200
+        return jsonify({"message": "تمّ تحميل البيانات", "truckTypesList": truckTypesList, "usersList": usersList}), 200
 
     except Exception as e:
         db.session.rollback()
@@ -412,7 +412,8 @@ def getComboboxMunicipalities():
             }
             for municipality in municipalities
         ]
-        return jsonify(data), 200
+        return jsonify({"message": "تمّ تحميل البيانات", "municipalities": data}), 200
+
 
     except Exception as e:
         db.session.rollback()
