@@ -3,7 +3,8 @@
     margin: 0;
     scroll-behavior: smooth;
     box-sizing: border-box;
-    direction: rtl;text-align: right;
+    direction: rtl;
+    text-align: right;
     font-family: "Tajawal", sans-serif;
 }
 
@@ -12,6 +13,7 @@ a {
     cursor: pointer;
     color: black;
 }
+
 a:hover {
     text-decoration: none !important;
     color: black !important;
@@ -73,7 +75,8 @@ a:hover {
     height: fit-content;
 }
 
-.markerInfo p, .markerInfo span {
+.markerInfo p,
+.markerInfo span {
     flex: 0 0 auto;
     font-size: 1.2em;
     margin: 0 !important;
