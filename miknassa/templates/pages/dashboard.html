@@ -1,6 +1,11 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block body %}
+{% include 'parts/nav.html' %}
 {% include 'additions/flashMessages.html' %}
+<div class="dashboard">
     <h1>لوحة التحكم</h1>
+</div>
+{% include 'pages/operation.html' %}
+
 {% endblock body %}

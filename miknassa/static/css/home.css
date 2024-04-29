@@ -182,10 +182,10 @@ nav .content {
 
     .list {
         flex-direction: column;
+        background-color: rgba(255, 255, 255, 0.1);
     }
 
     .list a {
-        background-color: rgba(255, 255, 255, 0.1);
         width: auto;
     }
 }

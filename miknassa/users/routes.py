@@ -126,16 +126,15 @@ def forgotPassword():
             )
             return redirect(url_for("users.login"))
     except Exception as e:
+        db.session.close()
         # raise
         flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
-    finally:
-        db.session.close()
-        return render_template(
-            "forms/forgotPassword.html",
-            title="Reset Password",
-            forgotPasswordForm=forgotPasswordForm,
-        )
+    return render_template(
+        "forms/forgotPassword.html",
+        title="Reset Password",
+        forgotPasswordForm=forgotPasswordForm,
+    )
 
 
 @usersBp.route("/reset password/<token>", methods=["GET", "POST"])
@@ -162,16 +161,15 @@ def resetPassword(token):
 
     except Exception as e:
         db.session.rollback()
+        db.session.close()
         # raise
         flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
-    finally:
-        db.session.close()
-        return render_template(
-            "forms/resetPassword.html",
-            title="Reset Password",
-            resetPasswordForm=resetPasswordForm,
-        )
+    return render_template(
+        "forms/resetPassword.html",
+        title="Reset Password",
+        resetPasswordForm=resetPasswordForm,
+    )
 
 
 @usersBp.route("/profile")
@@ -195,10 +193,11 @@ def profile():
     except Exception as e:
         # raise
         flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
+        return redirect(url_for("users.login"))
 
     finally:
         db.session.close()
-        return redirect(url_for("users.login"))
+
 
 
 @usersBp.route("/edit profile", methods=["GET", "POST"])
@@ -284,18 +283,17 @@ def editProfile():
             flash(f"تأكّد من صحة الإدخال.", "warning")
     except Exception as e:
         db.session.rollback()
+        db.session.close()
         # raise
         flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
-    finally:
-        db.session.close()
-        return render_template(
-            "forms/editProfile.html",
-            editProfileForm=editProfileForm,
-            userData=user,
-            address=address,
-            image=image,
-        )
+    return render_template(
+        "forms/editProfile.html",
+        editProfileForm=editProfileForm,
+        userData=user,
+        address=address,
+        image=image,
+    )
 
 
 @usersBp.route("/change password", methods=["GET", "POST"])
@@ -322,13 +320,12 @@ def changePassword():
                 flash("تأكد من صحة كلمة المرور.", "error")
     except Exception as e:
         db.session.rollback()
+        db.session.close()
         # raise
         flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
-    finally:
-        db.session.close()
-        return render_template(
-            "forms/changePassword.html",
-            title="Change Password",
-            changePasswordForm=changePasswordForm,
-        )
+    return render_template(
+        "forms/changePassword.html",
+        title="Change Password",
+        changePasswordForm=changePasswordForm,
+    )

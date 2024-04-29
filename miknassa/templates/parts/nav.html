@@ -2,8 +2,9 @@
     <div class="content">
         <div class="logo">مِـكنـسة</div>
         <div class="menuDiv">
-            <div id="menuIcon" onclick="toggleMenu()"><svg style="margin-top: 10px;" xmlns="http://www.w3.org/2000/svg"
-                    x="0px" y="0px" width="30" height="30" viewBox="0 0 50 50">
+            <div id="menuIcon" onclick="toggleMenu()">
+                <svg style="margin-top: 10px;" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
+                    viewBox="0 0 50 50">
                     <path
                         d="M 0 7.5 L 0 12.5 L 50 12.5 L 50 7.5 L 0 7.5 z M 0 22.5 L 0 27.5 L 50 27.5 L 50 22.5 L 0 22.5 z M 0 37.5 L 0 42.5 L 50 42.5 L 50 37.5 L 0 37.5 z">
                     </path>
@@ -16,7 +17,11 @@
                     <a href="#3">الخدمات</a>
                     <a href="#4">الشركاء</a>
                     {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('users.logout' ) }}" id="logout">خروج</a>
+                    {% if current_user.userTypeId != 1 %}
+                    <a href="{{ url_for('application.dashboard') }}" id="navJoin">لوحة التحكم</a>
+                    {% endif %}
+                    <a href="{{ url_for('users.profile') }}">{{ username }}</a>
+                    <a href="{{ url_for('users.logout') }}" id="logout">خروج</a>
                     {% else %}
                     <a href="#5" id="navJoin">انضمام</a>
                     {% endif %}
@@ -27,4 +32,4 @@
 </nav>
 
 
-<script src="{{ url_for('static', filename='js/navMenu.js' ) }}"></script>
+<script src="{{ url_for('static', filename='js/navMenu.js') }}"></script>
