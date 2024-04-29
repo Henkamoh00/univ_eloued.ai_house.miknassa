@@ -1,19 +1,20 @@
 <header>
     {% include 'parts/nav.html' %}
     {% include 'additions/flashMessages.html' %}
-     <div class="video">
-         <video autoplay loop muted id="video-background">
-             <source src="{{ url_for('static', filename='videos/4.mp4') }}" type="video/mp4" id="videoSrc">
-             Your browser does not support the video tag.
-         </video>      
-     </div>
-     <div class="motto">
-         <div class="headerText">
-             <h1>نظام مكنسة لتأمين مدينتنا</h1>
-             <p>الشركة نفسها هي شركة ناجحة جدا. الشخص المختار هو أن يفترضهم كما لو أن المعاناة ستتبع. ولكن بما أن عمل الاختيار والألم قد قيل، فسوف يحدث أن المهندس المعماري الذي يجد الآلام سوف يخفف بسبب العواقب.</p>
-         </div>
-         <div class="headerImage">
-             <img src="{{ url_for('static', filename='images/3.webp') }}" alt="">
-         </div>
-     </div>
- </header>
+    <div class="video">
+        <video autoplay loop muted id="video-background">
+            <source src="{{ url_for('static', filename='videos/4.mp4') }}" type="video/mp4" id="videoSrc">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="motto">
+        <div class="headerText">
+            <h1>نظام مكنسة لمدينة راقية</h1>
+            <p>نظام متابعة حركة ومواعيد اخراج القمامة من أجل الحفاظ على شوارع نظيفة وخالية من أكوام القمامة المبعثرة</p>
+        </div>
+        <div class="content">
+            <a href="" download="miknassa.apk">حمّله الآن</a>
+            <!--<img src="{{ url_for('static', filename='images/3.webp') }}" alt="">-->
+        </div>
+    </div>
+</header>
