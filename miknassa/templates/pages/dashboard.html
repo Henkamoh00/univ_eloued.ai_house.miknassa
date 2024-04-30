@@ -11,7 +11,7 @@
     <h1 class="title">لوحة التحكم</h1>
     <div class="formBtns">
         <p class="formBtn joinBtn" onclick="toggleForm('operation')">المهـام</p>
-        {% if current_user.userTypeId != 3 %}
+        {% if current_user.userTypeId == 3 %}
         <p class="formBtn enterBtn" onclick="toggleForm('roleChanging')">الأدور</p>
         <p class="formBtn joinBtn" onclick="toggleForm('truckAdding')">إدراج شاحنة</p>
         {% endif %}
@@ -19,7 +19,7 @@
     <div class="formBox">
         {% include 'pages/operation.html' %}
 
-        {% if current_user.userTypeId != 3 %}
+        {% if current_user.userTypeId == 3 %}
         {% include 'pages/roleChanging.html' %}
         {% include 'pages/truckAdding.html' %}
         {% endif %}
