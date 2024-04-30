@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from datetime import datetime, date
+from sqlalchemy import func
 from miknassa import db, loginManager
 from flask import current_app
 
@@ -114,6 +115,10 @@ class Municipality(db.Model):
         "User", backref="address", lazy=True, cascade="all, delete-orphan"
     )
 
+    r_truck = db.relationship(
+        "Truck", backref="address", lazy=True, cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"{{'id': {self.id}, 'name': {self.name}, 'dayraId': {self.dayraId}}}"
 
@@ -140,9 +145,22 @@ class Truck(db.Model):
     matricule = db.Column(db.String(15), unique=True, nullable=False)
     userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     truckTypeId = db.Column(db.Integer, db.ForeignKey("truckTypes.id"), nullable=False)
+    addressId = db.Column(
+        db.Integer,
+        db.ForeignKey("municipalities.id"),
+        nullable=False,
+        server_default="1",
+    )
     # qr_code = db.Column(db.LargeBinary) # PostegrSQL
-    qr_code = db.Column(db.VARBINARY(100)) # MySQL
+    qr_code = db.Column(db.VARBINARY(100))  # MySQL
     qr_codePath = db.Column(db.String(50), nullable=True)
+    lastLocation = db.Column(db.String(50))
+    lastLocationDate = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=datetime.utcnow,
+        server_default=func.now(),
+    )
 
     r_trucksReport = db.relationship(
         "TrucksReport", backref="reportOn", lazy=True, cascade="all, delete-orphan"

@@ -176,7 +176,7 @@ def garbageAlerts():
             }
             for garbageAlert in garbageAlerts
         ]
-        return jsonify({"message": "تمّ جلب البيانات", "alerts": data}), 200
+        return jsonify({"message": "تمّ تحميل البيانات", "alerts": data}), 200
 
     except Exception as e:
         db.session.rollback()
@@ -268,7 +268,7 @@ def getAllUsers():
             }
             for user in users
         ]
-        return jsonify({"message": "تمّ جلب البيانات", "users": data}), 200
+        return jsonify({"message": "تمّ تحميل البيانات", "users": data}), 200
 
     except Exception as e:
         db.session.rollback()
@@ -456,6 +456,54 @@ def truckLocations():
         db.session.rollback()
         # raise
         return f"فشل في تحديد مواقع الشاحنات{e}", 500
+
+    finally:
+        db.session.close()
+
+
+# لتحديد مواقع الشاحنات على الخريطة
+@apiBp.route("/get_truck_location_updates", methods=["POST"])
+def getTruckLocationUpdates():
+    try:
+        data = request.json
+
+        userId = data.get("userId")
+        latitude = data.get("latitude")
+        longitude = data.get("longitude")
+
+        if (
+            userId is None
+            or userId == ""
+            or latitude is None
+            or latitude == ""
+            or longitude is None
+            or longitude == ""
+        ):
+            return "توجد مشكلة في استلام البيانات", 400
+
+        userId = int(userId)
+        latitude = float(latitude)
+        longitude = float(longitude)
+
+        lat_str, lon_str = convert_coordinates(latitude, longitude)
+        address = f"{lat_str}{lon_str}"
+
+        truck = Truck.query.filtre_by(userId=userId).first()
+
+        truck = Truck(
+            userId=userId,
+            lastLocation=address,
+            lastLocationDate=datetime.utcnow(),
+        )
+        db.session.add(truck)
+        db.session.commit()
+
+        return "تم ارسال الموقع", 200
+
+    except Exception as e:
+        db.session.rollback()
+        # raise
+        return "فشل ارسال الموقع", 500
 
     finally:
         db.session.close()
