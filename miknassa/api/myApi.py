@@ -446,8 +446,9 @@ def truckLocations():
             return "توجد مشكلة في تحديد العنوان المطلوب", 400
 
         municipality = Municipality.query.filter_by(name=name).first()
+        truck = Truck.query.filter_by(addressId=municipality.id).all()
 
-        if name == "المقرن":
+        if truck:
             return "تمّ تحديد مواقع الشاحنات", 200
         else:
             return f"فشل في تحديد مواقع الشاحنات", 500
@@ -461,7 +462,7 @@ def truckLocations():
         db.session.close()
 
 
-# لتحديد مواقع الشاحنات على الخريطة
+# لتحديث مواقع الشاحنات
 @apiBp.route("/get_truck_location_updates", methods=["POST"])
 def getTruckLocationUpdates():
     try:
