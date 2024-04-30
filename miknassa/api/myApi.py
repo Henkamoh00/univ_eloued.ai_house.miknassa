@@ -446,10 +446,16 @@ def truckLocations():
             return "توجد مشكلة في تحديد العنوان المطلوب", 400
 
         municipality = Municipality.query.filter_by(name=name).first()
-        truck = Truck.query.filter_by(addressId=municipality.id).all()
+        trucks = Truck.query.filter_by(addressId=municipality.id).all()
 
-        if truck:
-            return "تمّ تحديد مواقع الشاحنات", 200
+        data = [
+            {"id": truck.id, "lastLocation": truck.lastLocation} for truck in trucks
+        ]
+
+        if trucks:
+            return (
+                jsonify({"message": "تمّ تحديد مواقع الشّاحنات", "truckLocations": data}),
+            )
         else:
             return f"فشل في تحديد مواقع الشاحنات", 500
 
