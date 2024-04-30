@@ -20,6 +20,8 @@ usersBp = Blueprint("users", __name__)
 
 @usersBp.route("/miknassa", methods=["GET", "POST"])
 def login():
+    isHomepage = False
+
     try:
         if current_user.is_authenticated:
             return redirect(url_for("main.home"))
@@ -100,10 +102,16 @@ def login():
     finally:
         db.session.close()
 
-    return render_template("forms/login.html", joinForm=joinForm, loginForm=loginForm)
+    return render_template(
+        "forms/login.html",
+        joinForm=joinForm,
+        loginForm=loginForm,
+        isHomepage=isHomepage,
+    )
 
 
 @usersBp.route("/logout")
+@login_required
 def logout():
     logout_user()
     flash(f"تم تسجيل الخروج بنجاح", "success")
@@ -112,6 +120,8 @@ def logout():
 
 @usersBp.route("/reset password", methods=["GET", "POST"])
 def forgotPassword():
+    isHomepage = False
+
     try:
         if current_user.is_authenticated:
             return redirect(url_for("main.home"))
@@ -134,12 +144,15 @@ def forgotPassword():
         "forms/forgotPassword.html",
         title="Reset Password",
         forgotPasswordForm=forgotPasswordForm,
+        isHomepage=isHomepage,
     )
 
 
 @usersBp.route("/reset password/<token>", methods=["GET", "POST"])
 def resetPassword(token):
     resetPasswordForm = ResetPasswordForm()
+    isHomepage = False
+
     try:
         if current_user.is_authenticated:
             return redirect(url_for("main.home"))
@@ -169,12 +182,17 @@ def resetPassword(token):
         "forms/resetPassword.html",
         title="Reset Password",
         resetPasswordForm=resetPasswordForm,
+        isHomepage=isHomepage,
     )
 
 
 @usersBp.route("/profile")
 @login_required
 def profile():
+    isHomepage = False
+    isProfilepage = True
+    username = current_user.username
+
     try:
         userData = User.query.filter_by(id=current_user.id).first()
         municipality = Municipality.query.filter_by(id=userData.municipalityId).first()
@@ -188,7 +206,13 @@ def profile():
         image = url_for("static", filename=f"media/{userData.imageFile}")
         gender = current_user.gender
         return render_template(
-            "pages/profile.html", userData=userData, address=address, image=image
+            "pages/profile.html",
+            userData=userData,
+            address=address,
+            image=image,
+            username=username,
+            isHomepage=isHomepage,
+            isProfilepage=isProfilepage,
         )
     except Exception as e:
         # raise
@@ -199,10 +223,12 @@ def profile():
         db.session.close()
 
 
-
 @usersBp.route("/edit profile", methods=["GET", "POST"])
 @login_required
 def editProfile():
+    isHomepage = False
+    username = current_user.username
+
     try:
         user = User.query.filter_by(id=current_user.id).first()
         municipality = Municipality.query.filter_by(id=user.municipalityId).first()
@@ -293,12 +319,17 @@ def editProfile():
         userData=user,
         address=address,
         image=image,
+        username=username,
+        isHomepage=isHomepage,
     )
 
 
 @usersBp.route("/change password", methods=["GET", "POST"])
 @login_required
 def changePassword():
+    isHomepage = False
+    username = current_user.username
+
     try:
         changePasswordForm = ChangePasswordForm()
         user = User.query.filter_by(id=current_user.id).first()
@@ -328,4 +359,6 @@ def changePassword():
         "forms/changePassword.html",
         title="Change Password",
         changePasswordForm=changePasswordForm,
+        username=username,
+        isHomepage=isHomepage,
     )

@@ -12,18 +12,34 @@
             </div>
             <div id="menu">
                 <div class="list">
+                    {% if isHomepage %}
                     <a href="#1">مكنسة</a>
                     <a href="#2">الفريق</a>
                     <a href="#3">الخدمات</a>
                     <a href="#4">الشركاء</a>
+                    {% endif %}
+
                     {% if current_user.is_authenticated %}
+                    {% if isHomepage %}
                     {% if current_user.userTypeId != 1 %}
                     <a href="{{ url_for('application.dashboard') }}" id="navJoin">لوحة التحكم</a>
                     {% endif %}
+                    {% else %}
+                    <a href="{{ url_for('main.home') }}" id="navJoin">الرئيسيّة</a>
+                    {% endif %}
+                    {% if not isProfilepage %}
                     <a href="{{ url_for('users.profile') }}">{{ username }}</a>
+                    {% endif %}
                     <a href="{{ url_for('users.logout') }}" id="logout">خروج</a>
                     {% else %}
+                    {% if isHomepage %}
                     <a href="#5" id="navJoin">انضمام</a>
+                    {% else %}
+                    <a href="{{ url_for('main.home') }}">الرئيسيّة</a>
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('users.login') }}" id="navJoin">انضمام</a>
+                    {% endif %}
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>

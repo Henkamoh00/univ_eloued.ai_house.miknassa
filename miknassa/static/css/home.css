@@ -153,6 +153,7 @@ nav .content {
     text-align: center;
     height: fit-content;
     padding: 5px 15px;
+    border-radius: 0 0 8px 8px;
 }
 
 .list a {

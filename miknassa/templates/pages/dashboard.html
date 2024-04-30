@@ -1,11 +1,31 @@
 {% extends "layout.html" %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css' ) }}">
+{% endblock stylesheets %}
+
 {% block body %}
 {% include 'parts/nav.html' %}
 {% include 'additions/flashMessages.html' %}
 <div class="dashboard">
-    <h1>لوحة التحكم</h1>
-</div>
-{% include 'pages/operation.html' %}
+    <h1 class="title">لوحة التحكم</h1>
+    <div class="formBtns">
+        <p class="formBtn joinBtn" onclick="toggleForm('operation')">المهـام</p>
+        {% if current_user.userTypeId != 3 %}
+        <p class="formBtn enterBtn" onclick="toggleForm('roleChanging')">الأدور</p>
+        <p class="formBtn joinBtn" onclick="toggleForm('truckAdding')">إدراج شاحنة</p>
+        {% endif %}
+    </div>
+    <div class="formBox">
+        {% include 'pages/operation.html' %}
 
+        {% if current_user.userTypeId != 3 %}
+        {% include 'pages/roleChanging.html' %}
+        {% include 'pages/truckAdding.html' %}
+        {% endif %}
+    </div>
+</div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js' ) }}"></script>
 {% endblock body %}

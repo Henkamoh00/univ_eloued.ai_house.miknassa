@@ -1,31 +1,35 @@
 body {
-    background-color: #f0f0f0;
+    background-color: #f8f9fa;
 }
 
 .dashboard {
     margin-top: 55px;
 }
 
-.list {
-    background-color: rgba(0, 0, 0, 0.1);
+.title {
+    text-align: center;
+    font-size: 38px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
-
-#menu::before {
-    top: -24px;
-    left: 74px;
-    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
-
-}
-
-/* ****************************** operation ******************************* */
 
 .container {
     max-width: 800px;
+    max-height: calc(60vh - fit-content);
     margin: 20px auto;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    overflow: hidden;
+}
+
+/* ****************************** operation ******************************* */
+
+.alerts {
+    height: 900px;
+    max-height: 45vh;
+    overflow: auto;
 }
 
 .alert-item {
@@ -64,4 +68,99 @@ body {
     background-color: red;
 }
 
-/* ****************************** operation ******************************* */
+/* ****************************** roleChangin ******************************* */
+
+.items {
+    height: 900px;
+    max-height: 45vh;
+    overflow: auto;
+}
+
+.item {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #000;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.item:hover {
+    background-color: #f0f0f0;
+}
+
+.item-icon {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.username {
+    color: #000;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.role {
+    font-weight: bold;
+    color: #000;
+}
+
+/* ****************************** truckAdding ******************************* */
+
+.input-field {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-sizing: border-box;
+    text-align: right;
+}
+
+.dropdown-field {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-sizing: border-box;
+    text-align: right;
+}
+
+.button {
+    background-color: orange;
+    color: #ffffff;
+    border: none;
+    border-radius: 15px;
+    padding: 15px 0;
+    width: 100%;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #ff8c00;
+}
+
+/* ****************************** navbar from "home.css" ******************************* */
+
+.list {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#menu::before {
+    top: -24px;
+    left: 58px;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+
+}
+
+/* ****************************** Tab from "login.css" ******************************* */
+
+.formBtns {
+    width: 90%;
+    margin: auto;
+}
