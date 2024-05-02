@@ -323,8 +323,18 @@ def addTruck():
         matricule = data.get("matricule")
         username = data.get("username")
         typeName = data.get("typeName")
+        municipalityName = data.get("municipality")
 
-        if matricule is None or matricule == "" or username is None or typeName is None:
+        if (
+            matricule is None
+            or matricule == ""
+            or municipalityName is None
+            or municipalityName == ""
+            or username is None
+            or username == ""
+            or typeName is None
+            or typeName == ""
+        ):
             return "تأكّد من المدخلات", 400
 
         truck = Truck.query.filter_by(matricule=matricule).first()
@@ -358,11 +368,13 @@ def addTruck():
 
         user = User.query.filter_by(username=username).first()
         truckType = TruckType.query.filter_by(typeName=typeName).first()
+        municipality = Municipality.query.filtre_by(name=municipalityName).first()
 
         truck = Truck(
             matricule=matricule,
             userId=user.id,
             truckTypeId=truckType.id,
+            addressId=municipality.name,
             qr_codePath="qrCodes/" + random_hex + ".jpg",
         )
 
@@ -380,7 +392,7 @@ def addTruck():
         db.session.close()
 
 
-# لجلب معلومات المستخدمين و انواع الشاحنات لملء كومبوبوكس
+# لجلب معلومات المستخدمين و انواع الشاحنات والولايات لملء كومبوبوكس
 @apiBp.route("/get_combobox_data", methods=["GET"])
 def getComboboxData():
     try:
@@ -390,12 +402,16 @@ def getComboboxData():
         truckTypes = TruckType.query.all()
         truckTypesList = [truckType.typeName for truckType in truckTypes]
 
+        municipalities = Municipality.query.all()
+        municipalitiesList = [municipality.name for municipality in municipalities]
+
         return (
             jsonify(
                 {
                     "message": "تمّ تحميل البيانات",
                     "truckTypesList": truckTypesList,
                     "usersList": usersList,
+                    "municipalitiesList": municipalitiesList,
                 }
             ),
             200,
@@ -440,12 +456,12 @@ def truckLocations():
     try:
         data = request.json
 
-        name = data.get("municipality")
+        municipalityName = data.get("municipality")
 
-        if name is None or name == "":
+        if municipalityName is None or municipalityName == "":
             return "توجد مشكلة في تحديد العنوان المطلوب", 400
 
-        municipality = Municipality.query.filter_by(name=name).first()
+        municipality = Municipality.query.filter_by(name=municipalityName).first()
         trucks = Truck.query.filter_by(addressId=municipality.id).all()
 
         data = [
@@ -457,7 +473,7 @@ def truckLocations():
                 jsonify({"message": "تمّ تحديد مواقع الشّاحنات", "truckLocations": data}),
             )
         else:
-            return f"فشل في تحديد مواقع الشاحنات", 500
+            return f"فشل في تحديد مواقع الشاحنات", 202
 
     except Exception as e:
         db.session.rollback()
@@ -469,8 +485,8 @@ def truckLocations():
 
 
 # لتحديث مواقع الشاحنات
-@apiBp.route("/get_truck_location_updates", methods=["POST"])
-def getTruckLocationUpdates():
+@apiBp.route("/set_truck_location_updates", methods=["POST"])
+def setTruckLocationUpdates():
     try:
         data = request.json
 

@@ -154,7 +154,7 @@ class Truck(db.Model):
     # qr_code = db.Column(db.LargeBinary) # PostegrSQL
     qr_code = db.Column(db.VARBINARY(100))  # MySQL
     qr_codePath = db.Column(db.String(50), nullable=True)
-    lastLocation = db.Column(db.String(50))
+    lastLocation = db.Column(db.String(50), nullable=True)
     lastLocationDate = db.Column(
         db.DateTime(timezone=True),
         nullable=False,
