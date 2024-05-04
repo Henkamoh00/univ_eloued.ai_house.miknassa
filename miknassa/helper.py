@@ -26,7 +26,7 @@ def convert_to_degrees(value):
     return degrees, minutes, seconds
 
 
-def convert_coordinates(latitude, longitude):
+def convert_from_coordinates(latitude, longitude):
     # Convert latitude to degrees, minutes, seconds
     lat_deg, lat_min, lat_sec = convert_to_degrees(abs(latitude))
     lat_dir = "N" if latitude >= 0 else "S"
@@ -40,6 +40,39 @@ def convert_coordinates(latitude, longitude):
     lon_str = f"{lon_deg}°{lon_min}'{lon_sec}\"{lon_dir}"
 
     return lat_str, lon_str
+
+
+
+def convert_to_coordinates(coordinates):
+    # التحقق مما إذا كانت الإحداثيات تحتوي على "N" للتقسيم
+    if 'N' in coordinates:
+        lat_long = coordinates.split('N')
+    else:
+        lat_long = coordinates.split('S')
+    latitude_part = lat_long[0].strip()
+    longitude_part = lat_long[1]
+
+    # تحويل العرض (latitude) إلى درجات ودقائق وثواني
+    lat_degrees = float(latitude_part.split('°')[0])
+    lat_minutes = float(latitude_part.split('°')[1].split("'")[0])
+    lat_seconds = float(latitude_part.split("'")[1].split('"')[0])
+    latitude = lat_degrees + lat_minutes / 60 + lat_seconds / 3600
+
+    # إضافة اتجاه العرض (شمالاً أو جنوباً)
+    if 'S' in coordinates:
+        latitude = -latitude
+
+    # تحويل الطول (longitude) إلى درجات ودقائق وثواني
+    lon_degrees = float(longitude_part.split('°')[0])
+    lon_minutes = float(longitude_part.split('°')[1].split("'")[0])
+    lon_seconds = float(longitude_part.split("'")[1].split('"')[0])
+    longitude = lon_degrees + lon_minutes / 60 + lon_seconds / 3600
+
+    # إضافة اتجاه الطول (شرقاً أو غرباً)
+    if 'W' in longitude_part:
+        longitude = -longitude
+
+    return latitude, longitude
 
 
 @current_app.errorhandler(404)

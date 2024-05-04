@@ -3,7 +3,11 @@ from flask_limiter import Limiter
 from sqlalchemy import null, desc
 from miknassa.models import *
 from miknassa import bcrypt
-from miknassa.helper import renameImage, convert_coordinates
+from miknassa.helper import (
+    renameImage,
+    convert_from_coordinates,
+    convert_to_coordinates,
+)
 import qrcode, secrets, os
 
 # from io import BytesIO
@@ -87,7 +91,7 @@ def garbageAlert():
         latitude = float(latitude)
         longitude = float(longitude)
 
-        lat_str, lon_str = convert_coordinates(latitude, longitude)
+        lat_str, lon_str = convert_from_coordinates(latitude, longitude)
         address = f"{lat_str}{lon_str}"
 
         garbageAlert = GarbageAlert(
@@ -103,7 +107,7 @@ def garbageAlert():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "فشل إرسال التّنبيه", 500
+        return f"فشل إرسال التّنبيه{e}", 500
 
     finally:
         db.session.close()
@@ -133,7 +137,7 @@ def garbageAlertPic():
         latitude = float(latitude)
         longitude = float(longitude)
 
-        lat_str, lon_str = convert_coordinates(latitude, longitude)
+        lat_str, lon_str = convert_from_coordinates(latitude, longitude)
         address = f"{lat_str}{lon_str}"
 
         if "image" in request.files:
@@ -218,7 +222,7 @@ def newOperation():
         latitude = float(latitude)
         longitude = float(longitude)
 
-        lat_str, lon_str = convert_coordinates(latitude, longitude)
+        lat_str, lon_str = convert_from_coordinates(latitude, longitude)
         address = f"{lat_str}{lon_str}"
 
         truck = Truck.query.filter_by(userId=userId).first()
@@ -368,13 +372,13 @@ def addTruck():
 
         user = User.query.filter_by(username=username).first()
         truckType = TruckType.query.filter_by(typeName=typeName).first()
-        municipality = Municipality.query.filtre_by(name=municipalityName).first()
+        municipality = Municipality.query.filter_by(name=municipalityName).first()
 
         truck = Truck(
             matricule=matricule,
             userId=user.id,
             truckTypeId=truckType.id,
-            addressId=municipality.name,
+            addressId=municipality.id,
             qr_codePath="qrCodes/" + random_hex + ".jpg",
         )
 
@@ -386,7 +390,7 @@ def addTruck():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
+        return f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق {e}", 500
 
     finally:
         db.session.close()
@@ -465,15 +469,23 @@ def truckLocations():
         trucks = Truck.query.filter_by(addressId=municipality.id).all()
 
         data = [
-            {"id": truck.id, "lastLocation": truck.lastLocation} for truck in trucks
+            {
+                "id": truck.id,
+                "location": convert_to_coordinates(truck.lastLocation),
+                "locationDate": truck.lastLocationDate,
+            }
+            for truck in trucks
+            if truck.lastLocation is not null
         ]
 
-        if trucks:
+        if trucks is not None:
+            print(data)
             return (
                 jsonify({"message": "تمّ تحديد مواقع الشّاحنات", "truckLocations": data}),
+                200,
             )
         else:
-            return f"فشل في تحديد مواقع الشاحنات", 202
+            return f"فشل في تحديد مواقع الشاحنات.", 202
 
     except Exception as e:
         db.session.rollback()
@@ -484,7 +496,7 @@ def truckLocations():
         db.session.close()
 
 
-# لتحديث مواقع الشاحنات
+# لإدراج مواقع الشاحنات
 @apiBp.route("/set_truck_location_updates", methods=["POST"])
 def setTruckLocationUpdates():
     try:
@@ -508,17 +520,15 @@ def setTruckLocationUpdates():
         latitude = float(latitude)
         longitude = float(longitude)
 
-        lat_str, lon_str = convert_coordinates(latitude, longitude)
+        lat_str, lon_str = convert_from_coordinates(latitude, longitude)
         address = f"{lat_str}{lon_str}"
 
-        truck = Truck.query.filtre_by(userId=userId).first()
+        truck = Truck.query.filter_by(userId=userId).first()
 
-        truck = Truck(
-            userId=userId,
-            lastLocation=address,
-            lastLocationDate=datetime.utcnow(),
-        )
-        db.session.add(truck)
+        truck.userId = userId
+        truck.lastLocation = address
+        truck.lastLocationDate = datetime.utcnow()
+
         db.session.commit()
 
         return "تم ارسال الموقع", 200
@@ -526,7 +536,7 @@ def setTruckLocationUpdates():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "فشل ارسال الموقع", 500
+        return f"فشل ارسال الموقع{e}", 500
 
     finally:
         db.session.close()
