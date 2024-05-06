@@ -540,3 +540,48 @@ def setTruckLocationUpdates():
 
     finally:
         db.session.close()
+
+
+# لتحديد الموقع الحالي للمستخدم
+@apiBp.route("/set_user_location", methods=["POST"])
+def setUserLocation():
+    try:
+        data = request.json
+
+        userId = data.get("userId")
+        latitude = data.get("latitude")
+        longitude = data.get("longitude")
+
+        if (
+            userId is None
+            or userId == ""
+            or latitude is None
+            or latitude == ""
+            or longitude is None
+            or longitude == ""
+        ):
+            return "توجد مشكلة في استلام البيانات", 400
+
+        userId = int(userId)
+        latitude = float(latitude)
+        longitude = float(longitude)
+
+        lat_str, lon_str = convert_from_coordinates(latitude, longitude)
+        address = f"{lat_str}{lon_str}"
+
+        user = User.query.filter_by(id=userId).first()
+
+        user.id = userId
+        user.location = address
+
+        db.session.commit()
+
+        return "تم تغيير موقعك بنجاح", 200
+
+    except Exception as e:
+        db.session.rollback()
+        # raise
+        return f"فشل تغيير موقعك{e}", 500
+
+    finally:
+        db.session.close()
