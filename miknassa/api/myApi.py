@@ -34,6 +34,11 @@ def loginUser():
         if user and bcrypt.check_password_hash(user.password, password):
             address = Municipality.query.filter_by(id=user.municipalityId).first()
 
+            if user.location is not None :
+                location = convert_to_coordinates(user.location)
+            else:
+                location = None
+
             userData = {
                 "id": user.id,
                 "firstName": user.firstName,
@@ -44,7 +49,7 @@ def loginUser():
                 "phoneNumber": user.phoneNumber,
                 "address": address.name,
                 # "houseNumber": user.houseNumber,
-                # "location": user.location,
+                "location": location,
                 # "birthDate": user.birthDate,
                 # "birthPlace": user.birthPlace,
                 "userTypeId": user.userTypeId,
@@ -61,7 +66,7 @@ def loginUser():
     except Exception as e:
         db.session.rollback()
         # raise
-        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
+        return f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق{e}", 500
 
     finally:
         db.session.close()
@@ -576,12 +581,12 @@ def setUserLocation():
 
         db.session.commit()
 
-        return "تم تغيير موقعك بنجاح", 200
+        return "تم تحديد موقعك بنجاح", 200
 
     except Exception as e:
         db.session.rollback()
         # raise
-        return f"فشل تغيير موقعك{e}", 500
+        return f"فشل في تحديد موقعك{e}", 500
 
     finally:
         db.session.close()
