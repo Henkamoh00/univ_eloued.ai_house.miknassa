@@ -220,7 +220,7 @@ def newOperation():
 
         oldOperation = Operation.query.filter_by(alertId=garbageAlertId).first()
         if oldOperation:
-            return "", 200
+            return "هذه المهمّة منجزة فعلاً", 200
 
         garbageAlertId = int(garbageAlertId)
         userId = int(userId)
@@ -425,30 +425,6 @@ def getComboboxData():
             ),
             200,
         )
-
-    except Exception as e:
-        db.session.rollback()
-        # raise
-        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
-
-    finally:
-        db.session.close()
-
-
-# لجلب اسماء الولايات لملء كومبوبوكس
-@apiBp.route("/get_combobox_municipalities", methods=["GET"])
-def getComboboxMunicipalities():
-    try:
-        municipalities = Municipality.query.all()
-
-        data = [
-            {
-                "id": municipality.id,
-                "name": municipality.name,
-            }
-            for municipality in municipalities
-        ]
-        return jsonify({"message": "تمّ تحميل البيانات", "municipalities": data}), 200
 
     except Exception as e:
         db.session.rollback()
