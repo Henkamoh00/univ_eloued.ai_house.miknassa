@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from sqlalchemy import null, desc
 from miknassa.models import *
 from miknassa import bcrypt
@@ -13,12 +14,18 @@ import qrcode, secrets, os
 # from io import BytesIO
 
 apiBp = Blueprint("api", __name__)
-limiter = Limiter(apiBp)
+limiter = Limiter(
+    get_remote_address,
+    app=apiBp,
+    default_limits=["5 per minute"],
+)
+# limiter = Limiter(apiBp)
 
 
 # لاستقبال بيانات تسجيل الدخول api
 @apiBp.route("/users", methods=["POST"])
-@limiter.limit("5 per minute", key_func=lambda: request.remote_addr)
+@limiter.limit("5 per minute")
+# @limiter.limit("5 per minute", key_func=lambda: request.remote_addr)
 def loginUser():
     try:
         data = request.json
