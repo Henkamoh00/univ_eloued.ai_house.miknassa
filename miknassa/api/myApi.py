@@ -34,7 +34,7 @@ def loginUser():
         if user and bcrypt.check_password_hash(user.password, password):
             address = Municipality.query.filter_by(id=user.municipalityId).first()
 
-            if user.location is not None :
+            if user.location is not None:
                 location = convert_to_coordinates(user.location)
             else:
                 location = None
@@ -456,7 +456,7 @@ def truckLocations():
                 "locationDate": truck.lastLocationDate,
             }
             for truck in trucks
-            if truck.lastLocation is not null
+            if truck.lastLocation is not null and truck.isActive == True
         ]
 
         if trucks is not None:
@@ -472,6 +472,40 @@ def truckLocations():
         db.session.rollback()
         # raise
         return f"فشل في تحديد مواقع الشاحنات{e}", 500
+
+    finally:
+        db.session.close()
+
+
+# لتغيير حالة الشاحنة من أجل ايقاف جلب معلومات الموقع الخاصة بها
+@apiBp.route("/truck_tracking_state", methods=["POST"])
+def truckTrackingState():
+    try:
+        data = request.json
+
+        userId = data.get("userId")
+        state = data.get("state")
+
+        if userId is None or userId == "" or state is None or state == "":
+            return "توجد مشكلة في استلام البيانات", 400
+
+        userId = int(userId)
+
+        truck = Truck.query.filter_by(userId=userId).first()
+
+        if state == "close":
+            truck.isActive = False
+        elif state == "open":
+            truck.isActive = True
+
+        db.session.commit()
+
+        return "تم تجاهل الشاحنة", 200
+
+    except Exception as e:
+        db.session.rollback()
+        # raise
+        return f"فشل تجاهل الشاحنة{e}", 500
 
     finally:
         db.session.close()
