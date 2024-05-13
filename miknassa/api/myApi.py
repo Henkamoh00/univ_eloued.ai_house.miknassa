@@ -1,7 +1,14 @@
 from flask import Blueprint, request, jsonify, current_app
 from flask_limiter import Limiter
 from sqlalchemy import null, desc
-from miknassa.models import User, Municipality, GarbageAlert, TruckType, Operation, Truck
+from miknassa.models import (
+    User,
+    Municipality,
+    GarbageAlert,
+    TruckType,
+    Operation,
+    Truck,
+)
 from miknassa import bcrypt, db
 from miknassa.helper import (
     renameImage,
@@ -15,6 +22,7 @@ import qrcode, secrets, os
 
 apiBp = Blueprint("api", __name__)
 limiter = Limiter(apiBp)
+
 
 # لاستقبال بيانات تسجيل الدخول api
 @apiBp.route("/users", methods=["POST"])
@@ -48,13 +56,13 @@ def loginUser():
                 "email": user.email,
                 "phoneNumber": user.phoneNumber,
                 "address": address.name,
-                # "houseNumber": user.houseNumber,
+                "houseNumber": user.houseNumber,
                 "location": location,
-                # "birthDate": user.birthDate,
-                # "birthPlace": user.birthPlace,
+                "birthDate": user.birthDate.isoformat(),
+                "birthPlace": user.birthPlace,
                 "userTypeId": user.userTypeId,
                 "imageFile": f"{request.host_url}media/{user.imageFile}",
-                # "joinDate": user.joinDate,
+                "joinDate": user.joinDate.isoformat(),
             }
             return (
                 jsonify({"message": "تم تسجيل الدخول بنجاح", "userData": userData}),
