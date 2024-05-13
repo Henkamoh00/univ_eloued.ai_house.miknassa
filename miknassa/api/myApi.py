@@ -14,18 +14,13 @@ import qrcode, secrets, os
 # from io import BytesIO
 
 apiBp = Blueprint("api", __name__)
-limiter = Limiter(
-    get_remote_address,
-    app=apiBp,
-    default_limits=["5 per minute"],
-)
-# limiter = Limiter(apiBp)
+limiter = Limiter(default_limits=["5 per day"], key_func=get_remote_address)
+limiter.init_app(apiBp)
 
 
 # لاستقبال بيانات تسجيل الدخول api
 @apiBp.route("/users", methods=["POST"])
-@limiter.limit("5 per minute")
-# @limiter.limit("5 per minute", key_func=lambda: request.remote_addr)
+@limiter.limit('5 per day')
 def loginUser():
     try:
         data = request.json
