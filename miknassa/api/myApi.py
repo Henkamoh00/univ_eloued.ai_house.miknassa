@@ -1,26 +1,24 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from sqlalchemy import null, desc
-from miknassa.models import *
-from miknassa import bcrypt
+from miknassa.models import User, Municipality, GarbageAlert, TruckType, Operation, Truck
+from miknassa import bcrypt, db
 from miknassa.helper import (
     renameImage,
     convert_from_coordinates,
     convert_to_coordinates,
 )
+from datetime import datetime
 import qrcode, secrets, os
 
 # from io import BytesIO
 
 apiBp = Blueprint("api", __name__)
-limiter = Limiter(default_limits=["5 per day"], key_func=get_remote_address)
-limiter.init_app(apiBp)
-
+limiter = Limiter(apiBp)
 
 # لاستقبال بيانات تسجيل الدخول api
 @apiBp.route("/users", methods=["POST"])
-@limiter.limit('5 per day')
+@limiter.limit("5 per minute", key_func=lambda: request.remote_addr)
 def loginUser():
     try:
         data = request.json
@@ -164,7 +162,7 @@ def garbageAlertPic():
 
         return "تمّ ارسال التنبيه", 200
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         # raise
         return "فشل إرسال التّنبيه", 500
@@ -189,7 +187,7 @@ def garbageAlerts():
         ]
         return jsonify({"message": "تمّ تحميل البيانات", "alerts": data}), 200
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         # raise
         return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
@@ -250,7 +248,7 @@ def newOperation():
 
         return "تمّ تأكيد إتمام المهمّة", 200
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         # raise
         return "فشل تأكيد إتمام المهمّة\nحاول مجدّدا في وقت لاحق", 500
@@ -281,7 +279,7 @@ def getAllUsers():
         ]
         return jsonify({"message": "تمّ تحميل البيانات", "users": data}), 200
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         # raise
         return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
@@ -316,7 +314,7 @@ def roleChanging():
 
         return "تم تغيير الدّور", 200
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         # raise
         return "فشل تغيير الدّور", 500
@@ -428,7 +426,7 @@ def getComboboxData():
             200,
         )
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         # raise
         return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
@@ -468,7 +466,7 @@ def truckLocations():
                 200,
             )
         else:
-            return f"فشل في تحديد مواقع الشاحنات.", 202
+            return "فشل في تحديد مواقع الشاحنات.", 202
 
     except Exception as e:
         db.session.rollback()
