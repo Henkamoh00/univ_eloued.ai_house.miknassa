@@ -36,7 +36,7 @@
                     <a href="#5" id="navJoin">انضمام</a>
                     {% else %}
                     <a href="{{ url_for('main.home') }}">الرئيسيّة</a>
-                    {% if not current_user.is_authenticated %}
+                    {% if not isLoginpage %}
                     <a href="{{ url_for('users.login') }}" id="navJoin">انضمام</a>
                     {% endif %}
                     {% endif %}

@@ -21,6 +21,7 @@ usersBp = Blueprint("users", __name__)
 @usersBp.route("/miknassa", methods=["GET", "POST"])
 def login():
     isHomepage = False
+    isLoginpage = True
 
     try:
         if current_user.is_authenticated:
@@ -53,11 +54,11 @@ def login():
                 )
                 return redirect(url_for("users.login"))
             else:
-                flash(f"تأكّد من صحة الإدخال.", "warning")
+                flash("تأكّد من صحة الإدخال.", "warning")
     except Exception as e:
         db.session.rollback()
         # raise
-        flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
+        flash("يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
     finally:
         db.session.close()
@@ -92,12 +93,12 @@ def login():
                             else redirect(url_for("application.dashboard"))
                         )
                     else:
-                        flash(f"يوجد خلل في الحساب", "error")
+                        flash("يوجد خلل في الحساب", "error")
                 else:
-                    flash(f"فشل تسجيل الدخول، حاول مجدّدًا.", "error")
+                    flash("فشل تسجيل الدخول، حاول مجدّدًا.", "error")
     except Exception as e:
         # raise
-        flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
+        flash("يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
     finally:
         db.session.close()
@@ -107,6 +108,7 @@ def login():
         joinForm=joinForm,
         loginForm=loginForm,
         isHomepage=isHomepage,
+        isLoginpage = isLoginpage,
     )
 
 
@@ -114,7 +116,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash(f"تم تسجيل الخروج بنجاح", "success")
+    flash("تم تسجيل الخروج بنجاح", "success")
     return redirect(url_for("users.login"))
 
 
@@ -138,7 +140,7 @@ def forgotPassword():
     except Exception as e:
         db.session.close()
         # raise
-        flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
+        flash("يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
     return render_template(
         "forms/forgotPassword.html",
@@ -176,7 +178,7 @@ def resetPassword(token):
         db.session.rollback()
         db.session.close()
         # raise
-        flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
+        flash("يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
     return render_template(
         "forms/resetPassword.html",
@@ -191,7 +193,6 @@ def resetPassword(token):
 def profile():
     isHomepage = False
     isProfilepage = True
-    username = current_user.username
 
     try:
         userData = User.query.filter_by(id=current_user.id).first()
@@ -204,19 +205,17 @@ def profile():
             "municipality": municipality.name,
         }
         image = url_for("static", filename=f"media/{userData.imageFile}")
-        gender = current_user.gender
         return render_template(
             "pages/profile.html",
             userData=userData,
             address=address,
             image=image,
-            username=username,
             isHomepage=isHomepage,
             isProfilepage=isProfilepage,
         )
     except Exception as e:
         # raise
-        flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
+        flash("يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
         return redirect(url_for("users.login"))
 
     finally:
@@ -290,7 +289,7 @@ def editProfile():
             user.birthPlace = editProfileForm.birthPlace.data
 
             db.session.commit()
-            flash(f"تم تعديل الحساب بنجاح.", "success")
+            flash("تم تعديل الحساب بنجاح.", "success")
             return redirect(url_for("users.profile"))
 
         elif request.method == "GET":
@@ -306,12 +305,12 @@ def editProfile():
             editProfileForm.birthPlace.data = current_user.birthPlace
 
         else:
-            flash(f"تأكّد من صحة الإدخال.", "warning")
+            flash("تأكّد من صحة الإدخال.", "warning")
     except Exception as e:
         db.session.rollback()
         db.session.close()
         # raise
-        flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
+        flash("يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
     return render_template(
         "forms/editProfile.html",
@@ -353,7 +352,7 @@ def changePassword():
         db.session.rollback()
         db.session.close()
         # raise
-        flash(f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
+        flash("يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500, "error")
 
     return render_template(
         "forms/changePassword.html",
