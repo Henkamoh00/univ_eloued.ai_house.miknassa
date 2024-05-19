@@ -297,6 +297,22 @@ header {
     box-shadow: 1px 1px 20px 1px rgb(236, 230, 230);
 }
 
+.motto .content {
+    overflow: visible;
+}
+
+.apkBtn {
+    flex: 0 0 auto;
+    font-size: larger;
+    font-size: 2em;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    padding: 5px 15px;
+    box-shadow: 1px 1px 20px 1px var(--primary);
+    background-color: var(--secondary);
+    color: white;
+}
+
 /* ************************************** main *********************************** */
 
 main {
@@ -323,6 +339,7 @@ main section {
     background-color: var(--gray);
     border-radius: 8px;
     box-shadow: 1px 1px 10px 1px #d9dadd;
+    margin: 0 10px;
 }
 
 .about img {
@@ -380,7 +397,6 @@ main section {
 }
 
 .partners .content .card .data h3 {
-    background-color: black;
     border-radius: 0.9375em;
     padding: 0.4em 0;
     height: 2.8125em;
