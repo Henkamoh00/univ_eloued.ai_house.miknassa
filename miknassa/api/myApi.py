@@ -74,7 +74,7 @@ def loginUser():
     except Exception as e:
         db.session.rollback()
         # raise
-        return f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق{e}", 500
+        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق", 500
 
     finally:
         db.session.close()
@@ -120,7 +120,7 @@ def garbageAlert():
     except Exception as e:
         db.session.rollback()
         # raise
-        return f"فشل إرسال التّنبيه{e}", 500
+        return "فشل إرسال التّنبيه", 500
 
     finally:
         db.session.close()
@@ -403,7 +403,7 @@ def addTruck():
     except Exception as e:
         db.session.rollback()
         # raise
-        return f"يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق {e}", 500
+        return "يوجد مشكلة فالإتّصال\nحاول مجدّدا في وقت لاحق ", 500
 
     finally:
         db.session.close()
@@ -479,7 +479,7 @@ def truckLocations():
     except Exception as e:
         db.session.rollback()
         # raise
-        return f"فشل في تحديد مواقع الشاحنات{e}", 500
+        return "فشل في تحديد مواقع الشاحنات", 500
 
     finally:
         db.session.close()
@@ -513,7 +513,7 @@ def truckTrackingState():
     except Exception as e:
         db.session.rollback()
         # raise
-        return f"فشل تجاهل الشاحنة{e}", 500
+        return "فشل تجاهل الشاحنة", 500
 
     finally:
         db.session.close()
@@ -559,7 +559,7 @@ def setTruckLocationUpdates():
     except Exception as e:
         db.session.rollback()
         # raise
-        return f"فشل ارسال الموقع{e}", 500
+        return "فشل ارسال الموقع", 500
 
     finally:
         db.session.close()
@@ -604,7 +604,7 @@ def setUserLocation():
     except Exception as e:
         db.session.rollback()
         # raise
-        return f"فشل في تحديد موقعك{e}", 500
+        return "فشل في تحديد موقعك", 500
 
     finally:
         db.session.close()
