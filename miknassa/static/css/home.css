@@ -1,3 +1,10 @@
+:root {
+    --primary: orange;
+    --secondary: #ff8c00;
+    --gray: #f8f9fa;
+    --black-shadow: rgba(0, 0, 0, 0.1);
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -73,7 +80,6 @@ a:hover {
 h2 {
     text-align: center;
     padding: 0.5em;
-    background-color: var(--color3);
     font-size: 2.5em;
     border-radius: 0.625em;
     -webkit-border-radius: 0.625em;
@@ -107,7 +113,7 @@ nav .content {
     height: fit-content;
     font-size: 2em;
     font-weight: bolder;
-    -webkit-text-stroke-color: red;
+    -webkit-text-stroke-color: var(--primary);
     -webkit-text-stroke-width: medium;
     margin-right: 10%;
 }
@@ -166,8 +172,8 @@ nav .content {
 }
 
 .list a:hover {
-    border-bottom: 1px skyblue solid;
-    color: aqua !important;
+    border-bottom: 1px var(--primary) solid;
+    color: var(--secondary) !important;
     padding-bottom: 4px;
     cursor: pointer;
 }
@@ -192,10 +198,10 @@ nav .content {
 }
 
 #navJoin {
-    color: aqua !important;
+    color: var(--secondary) !important;
     font-size: 1.5em;
     line-height: 1.2em;
-    border-bottom: 1px skyblue dotted;
+    border-bottom: 1px var(--primary) dotted;
 }
 
 #navJoin:hover {
@@ -208,8 +214,8 @@ nav .content {
 }
 
 #logout:hover {
-    border-bottom: 1px red solid;
-    color: red !important;
+    border-bottom: 1px var(--primary) solid;
+    color: var(--primary) !important;
 }
 
 /* ************************************** header *********************************** */
@@ -314,7 +320,7 @@ main section {
     align-items: flex-start;
     overflow: hidden;
     padding-top: 5vh;
-    background-color: #f8f9fa;
+    background-color: var(--gray);
     border-radius: 8px;
     box-shadow: 1px 1px 10px 1px #d9dadd;
 }
@@ -374,7 +380,7 @@ main section {
 }
 
 .partners .content .card .data h3 {
-    background-color: var(--color3);
+    background-color: black;
     border-radius: 0.9375em;
     padding: 0.4em 0;
     height: 2.8125em;
@@ -401,7 +407,7 @@ main section {
     font-weight: bolder;
     text-align: center;
     margin-bottom: 5vh;
-    -webkit-text-stroke-color: skyblue;
+    -webkit-text-stroke-color: var(--primary);
     -webkit-text-stroke-width: medium;
 }
 
@@ -412,8 +418,8 @@ main section {
     border: 1px solid rgb(194, 187, 187);
     border-radius: 8px;
     padding: 5px 15px;
-    box-shadow: 1px 1px 20px 1px skyblue;
-    background-color: lightskyblue;
+    box-shadow: 1px 1px 20px 1px var(--primary);
+    background-color: var(--primary);
     color: white;
 }
 

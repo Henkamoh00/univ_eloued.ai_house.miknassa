@@ -1,5 +1,12 @@
+:root {
+    --primary: orange;
+    --secondary: #ff8c00;
+    --gray: #f8f9fa;
+    --black-shadow: rgba(0, 0, 0, 0.1);
+}
+
 body {
-    background-color: #f8f9fa;
+    background-color: var(--gray);
 }
 
 .dashboard {
@@ -17,9 +24,9 @@ body {
     max-width: 800px;
     max-height: calc(60vh - fit-content);
     margin: 20px auto;
-    background-color: #fff;
+    background-color: white;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px var(--black-box-shadow);
     padding: 20px;
     overflow: hidden;
 }
@@ -79,7 +86,7 @@ body {
 .item {
     padding: 10px;
     margin: 5px 0;
-    border: 1px solid #000;
+    border: 1px solid black;
     border-radius: 20px;
     display: flex;
     align-items: center;
@@ -95,7 +102,7 @@ body {
 }
 
 .username {
-    color: #000;
+    color: black;
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
@@ -104,7 +111,7 @@ body {
 
 .role {
     font-weight: bold;
-    color: #000;
+    color: black;
 }
 
 /* ****************************** truckAdding ******************************* */
@@ -130,8 +137,8 @@ body {
 }
 
 .button {
-    background-color: orange;
-    color: #ffffff;
+    background-color: var(--primary);
+    color: white;
     border: none;
     border-radius: 15px;
     padding: 15px 0;
@@ -142,19 +149,19 @@ body {
 }
 
 .button:hover {
-    background-color: #ff8c00;
+    background-color: var(--secondary);
 }
 
 /* ****************************** navbar from "home.css" ******************************* */
 
 .list {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--black-box-shadow);
 }
 
 #menu::before {
     top: -24px;
     left: 58px;
-    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    border-color: transparent transparent var(--black-box-shadow) transparent;
 
 }
 

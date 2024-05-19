@@ -1,3 +1,10 @@
+:root {
+    --primary: orange;
+    --secondary: #ff8c00;
+    --gray: #f8f9fa;
+    --black-shadow: rgba(0, 0, 0, 0.1);
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -37,7 +44,7 @@ a {
 
 .formBox {
     flex: 0 0 auto;
-    background-color: #f8f9fa;
+    background-color: var(--gray);
     padding: 20px 5vw;
     width: 100%;
     border-radius: 8px;
@@ -60,7 +67,7 @@ form {
     overflow: hidden;
     width: 100%;
     border-radius: 8px;
-    background-color: #f8f9fa;
+    background-color: var(--gray);
 }
 
 .formBtn {
@@ -80,11 +87,11 @@ form {
 }
 
 .joinBtn {
-    background-color: aqua;
+    background-color: var(--secondary);
 }
 
 .enterBtn {
-    background-color: skyblue;
+    background-color: var(--primary);
 }
 
 
