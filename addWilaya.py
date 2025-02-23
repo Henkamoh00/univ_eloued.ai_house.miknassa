@@ -1,7 +1,7 @@
 # يلزم تكون قاعدة البيانات منشأة
 #  استدعاء النماذج من ملف النماذج(مودلز)
-from miknassa.models import Wilaya, Dayra, Municipality
-from miknassa import db
+from application.models import Wilaya, Dayra, Municipality
+from application import db
 from run import app
 
 app.app_context().push()

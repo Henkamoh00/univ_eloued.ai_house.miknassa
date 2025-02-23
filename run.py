@@ -1,4 +1,4 @@
-from miknassa import createApp
+from application import createApp
 app = createApp()
 
 if __name__ == '__main__':

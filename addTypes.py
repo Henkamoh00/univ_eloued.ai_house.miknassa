@@ -1,7 +1,7 @@
 # يلزم تكون قاعدة البيانات منشأة
 #  استدعاء النماذج من ملف النماذج(مودلز)
-from miknassa.models import TruckType, UserType
-from miknassa import db
+from application.models import TruckType, UserType
+from application import db
 from run import app
 
 with app.app_context():
