@@ -35,7 +35,7 @@ psycopg2-binary==2.9.9
 Pygments==2.20.0
 PyMySQL==1.1.1
 pypng==0.20220715.0
-python-dotenv==1.0.1
+python-dotenv==1.2.2
 qrcode==7.4.2
 rich==13.7.1
 SQLAlchemy==2.0.28
